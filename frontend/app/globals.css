@@ -1,0 +1,105 @@
+/* Reset + Illumia brand tokens shared by every version. Each version scopes its own look under .v1 … .v4. */
+:root {
+  --crimson: #b41f3c;
+  --crimson-deep: #8e162e;
+  --crimson-on-dark: #e66a82;
+  --crimson-soft: #e0a6b2;
+  --crimson-tint: #fbe7eb;
+  --ink: #26262b;
+  --charcoal: #3d3d3e;
+  --charcoal-deep: #1f1f25;
+  --muted: #6e6e75;
+  --subtle-on-dark: #c9c9cf;
+  --white: #ffffff;
+  --offwhite: #f4f5f7;
+  --card: #f6f6f8;
+  --border: #e2e2e7;
+  --gutter: clamp(16px, 2.6vw, 40px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background: var(--charcoal-deep);
+  color: var(--ink);
+}
+
+h1, h2, h3, h4, p, ul, ol, figure, blockquote, dl, dd {
+  margin: 0;
+}
+
+ul[role="list"], ol[role="list"] {
+  list-style: none;
+  padding: 0;
+}
+
+img, svg, video, canvas {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+::selection {
+  background: var(--crimson);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--crimson-on-dark);
+  outline-offset: 4px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
