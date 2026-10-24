@@ -6,16 +6,11 @@ import { clearEnter, signalEnter } from "@/components/motion/onEnter";
 import { TLink, TransitionProvider, type TransitionHooks } from "@/components/motion/Transition";
 import { Clock } from "@/components/motion/Clock";
 import { gsap, useGSAP, ease, finePointer } from "@/lib/gsap";
-import { company } from "@/lib/content";
+import { company, navFor } from "@/lib/copy";
 import { usePathname } from "next/navigation";
 import { Footer } from "./Footer";
 
-const nav = [
-  { href: "/v1", label: "Home" },
-  { href: "/v1/services", label: "Services" },
-  { href: "/v1/work", label: "Work" },
-  { href: "/v1/contact", label: "Contact" },
-];
+const nav = navFor("v1");
 
 /* The diamond: closed is a point at the centre, open covers the viewport. */
 const DIAMOND_CLOSED = "polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%)";

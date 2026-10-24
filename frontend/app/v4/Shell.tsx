@@ -6,14 +6,9 @@ import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { clearEnter, signalEnter } from "@/components/motion/onEnter";
 import { TLink, TransitionProvider, type TransitionHooks } from "@/components/motion/Transition";
 import { gsap, ScrollTrigger, useGSAP, ease, reducedMotion } from "@/lib/gsap";
-import { company } from "@/lib/content";
+import { company, navFor, pages, services } from "@/lib/copy";
 
-const nav = [
-  { href: "/v4", label: "Home" },
-  { href: "/v4/services", label: "Services" },
-  { href: "/v4/work", label: "Work" },
-  { href: "/v4/contact", label: "Contact" },
-];
+const nav = navFor("v4");
 
 export function Shell({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
@@ -133,12 +128,17 @@ export function Shell({ children }: { children: ReactNode }) {
             <div className="v4-foot__inner">
               <img src="/brand/illumia-mark.svg" alt="" width={56} height={56} />
               <p className="v4-foot__tag"><em>{company.tagline}</em></p>
-              <nav aria-label="Footer" className="v4-foot__nav">
-                {nav.map((n) => <TLink key={n.href} href={n.href}>{n.label}</TLink>)}
+              <p className="v4-foot__ask">{pages.footer.ask} <TLink href="/v4/contact" className="v4-link" label="Contact">{pages.footer.cta}</TLink></p>
+              <p className="v4-foot__about">{pages.footer.about}</p>
+              <nav aria-label="Services" className="v4-foot__nav">
+                {services.map((s) => <TLink key={s.slug} href={`/v4/services/${s.slug}`} label={s.name}>{s.name}</TLink>)}
+                <TLink href="/v4/process" label="Process">How we work</TLink>
                 <a href={company.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
               </nav>
               <address>{company.address.join(", ")}</address>
-              <p className="v4-foot__legal">© 2026 Illumia Solutions · <a href={company.phoneHref}>{company.phone}</a></p>
+              <p className="v4-foot__legal">
+                {pages.footer.legal} · <a href={`mailto:${company.email}`}>{company.email}</a> · <a href={company.phoneHref}>{company.phone}</a>
+              </p>
             </div>
           </footer>
 

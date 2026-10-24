@@ -2,21 +2,14 @@
 
 import { useRef, useState, type FormEvent } from "react";
 import { TLink } from "@/components/motion/Transition";
-import { ProjectCover } from "@/components/ui/Fragments";
 import { onPageEnter } from "@/components/motion/onEnter";
 import { gsap, ScrollTrigger, SplitText, useGSAP, ease, reducedMotion } from "@/lib/gsap";
-import { company, projects } from "@/lib/content";
+import { agile, company, intro, ownership, pages, process, stats } from "@/lib/copy";
 import { Building, floors } from "./Building";
 import { Overlap } from "./Overlap";
 
-/* SAMPLE: a typical budget split across phases; confirm with Illumia before launch */
-const plan = [
-  { phase: "Discovery", share: 10, note: "Brief, prototype, fixed quote" },
-  { phase: "Design", share: 15, note: "Flows, interface, architecture" },
-  { phase: "Build", share: 50, note: "Sprints with a demo every two weeks" },
-  { phase: "Harden", share: 15, note: "Security review, load tests, documents" },
-  { phase: "Launch", share: 10, note: "Staged rollout and handover" },
-];
+/* the seven stages as a survey: each bar marks how far round the cycle a stage sits */
+const plan = process.map((p, i) => ({ phase: p.name, share: Math.round(((i + 1) / process.length) * 50), note: p.body }));
 
 export default function BlueprintHome() {
   const root = useRef<HTMLDivElement>(null);
@@ -70,7 +63,7 @@ export default function BlueprintHome() {
         });
       });
 
-      /* --- view from above: a horizontal gallery that opens each picture as it arrives --- */
+      /* --- what you keep: a horizontal gallery that opens each file as it arrives --- */
       mm.add("(min-width: 900px)", () => {
         const track = el.querySelector<HTMLElement>(".v4-gallery__track")!;
         const dist = () => track.scrollWidth - window.innerWidth;
@@ -86,7 +79,7 @@ export default function BlueprintHome() {
         });
       });
 
-      /* --- plan: each bar grows to its share --- */
+      /* --- the cycle: each bar grows to its place in the loop --- */
       gsap.utils.toArray<HTMLElement>(".v4-plan__row").forEach((r, i) => {
         gsap.from(r.querySelector(".v4-plan__fill"), {
           scaleX: 0, duration: 1.6, delay: i * 0.08, ease: ease.out,
@@ -120,14 +113,12 @@ export default function BlueprintHome() {
       {/* HERO */}
       <section className="v4-hero" aria-labelledby="v4-title">
         <div className="v4-hero__text">
-          <h1 id="v4-title" className="v4-hero__title">Software, <em>built</em> to stand</h1>
-          <p className="v4-hero__sub">
-            Illumia&rsquo;s software wing designs systems the way architects design buildings: foundation
-            first, every floor load-tested, a facade people enjoy using.
-          </p>
+          <p className="v4-hero__kicker"><em>{intro.eyebrow}</em></p>
+          <h1 id="v4-title" className="v4-hero__title">{`${intro.title[0]},`} <em>{intro.title[1]}</em> {intro.title[2]}</h1>
+          <p className="v4-hero__sub">{intro.lede}</p>
           <div className="v4-hero__links">
-            <TLink href="/v4/contact" className="v4-btn" label="Contact">Plan your build</TLink>
-            <a href="#floors" className="v4-link">Walk the floors</a>
+            <TLink href="/v4/contact" className="v4-btn" label="Contact">{pages.hero.primary}</TLink>
+            <TLink href="/v4/services" className="v4-link" label="Services">{pages.hero.secondary}</TLink>
           </div>
         </div>
         <Building className="v4-hero__art" />
@@ -137,13 +128,15 @@ export default function BlueprintHome() {
       <section id="floors" className="v4-floors" aria-labelledby="v4-floors-title">
         <div className="v4-floors__art"><Building /></div>
         <div className="v4-floors__text">
-          <h2 id="v4-floors-title" className="v4-h">Five floors, one building</h2>
-          {/* foundation first, as the hero promises */}
+          <h2 id="v4-floors-title" className="v4-h">{pages.servicesHead.title}</h2>
+          <p className="v4-floors__about">{intro.about}</p>
+          {/* foundation first, the way the building is drawn */}
           {floors.map((f) => (
             <article key={f.key} className="v4-floor">
               <p className="v4-floor__line"><em>{f.line}</em></p>
               <h3>{f.name}</h3>
               <p>{f.body}</p>
+              <TLink href={`/v4/services/${f.key}`} className="v4-link" label={f.name}>Read more</TLink>
             </article>
           ))}
         </div>
@@ -152,11 +145,8 @@ export default function BlueprintHome() {
       {/* OFFICES / OVERLAP */}
       <section className="v4-near" aria-labelledby="v4-near-title">
         <div className="v4-near__head">
-          <h2 id="v4-near-title" className="v4-h">Closer than it looks</h2>
-          <p>
-            Six offices across Asia, Africa, Australia and North America. Whatever your timezone, part of the
-            team is at work while you are.
-          </p>
+          <h2 id="v4-near-title" className="v4-h">{pages.officesHead.title}</h2>
+          <p>{pages.officesHead.body}</p>
         </div>
         <Overlap />
       </section>
@@ -165,15 +155,17 @@ export default function BlueprintHome() {
       <section className="v4-gallery" aria-labelledby="v4-gal-title">
         <div className="v4-gallery__track">
           <div className="v4-gallery__intro">
-            <h2 id="v4-gal-title" className="v4-h">The view from above</h2>
-            <p>Concept builds that show the kind of systems we design. Client work is shared on request.</p>
-            <TLink href="/v4/work" className="v4-link" label="Work">See every project</TLink>
+            <h2 id="v4-gal-title" className="v4-h">{pages.ownershipHead.title}</h2>
+            <p>Every repository, design file and credential is handed over. Nothing stays behind with us.</p>
+            <TLink href="/v4/process" className="v4-link" label="Process">How we work</TLink>
           </div>
-          {projects.map((p) => (
-            <article key={p.slug} className="v4-shot">
-              <div className="v4-shot__img"><ProjectCover kind={p.cover} /></div>
-              <h3>{p.name}</h3>
-              <p>{p.sector}, concept</p>
+          {ownership.map((o) => (
+            <article key={o.name} className="v4-shot">
+              <div className="v4-shot__img v4-shot__img--file">
+                <pre aria-hidden="true">{o.snippet.map((l) => <code key={l}>{l}</code>)}</pre>
+              </div>
+              <h3>{o.name}</h3>
+              <p>{o.body}</p>
             </article>
           ))}
         </div>
@@ -182,15 +174,20 @@ export default function BlueprintHome() {
       {/* PLAN */}
       <section className="v4-plan" aria-labelledby="v4-plan-title">
         <div className="v4-plan__head">
-          <h2 id="v4-plan-title" className="v4-h">Where the budget goes</h2>
-          <p>A typical split for a new product. Half the money goes into building, and a quarter into making sure it holds.</p>
+          <h2 id="v4-plan-title" className="v4-h">{pages.processHead.title}</h2>
+          <p>{agile.body}</p>
+          <dl className="v4-plan__stats">
+            {stats.map((s) => (
+              <div key={s.label}><dd>{s.value}{s.suffix}</dd><dt>{s.label}</dt></div>
+            ))}
+          </dl>
         </div>
         <ul role="list" className="v4-plan__list">
           {plan.map((p) => (
             <li key={p.phase} className="v4-plan__row">
               <span className="v4-plan__phase">{p.phase}</span>
               <span className="v4-plan__bar"><i className="v4-plan__fill" style={{ width: `${p.share * 2}%` }} /></span>
-              <b>{p.share}%</b>
+              <b>{p.phase === plan[plan.length - 1].phase ? "↺" : `0${plan.indexOf(p) + 1}`}</b>
               <span className="v4-plan__note">{p.note}</span>
             </li>
           ))}
@@ -199,7 +196,7 @@ export default function BlueprintHome() {
 
       {/* BEGIN */}
       <section className="v4-begin" aria-labelledby="v4-begin-title">
-        <h2 id="v4-begin-title" className="v4-h">Let&rsquo;s begin</h2>
+        <h2 id="v4-begin-title" className="v4-h">{pages.footer.ask}</h2>
         {joined ? (
           <p className="v4-begin__done" role="status">Thank you. We will be in touch within one working day.</p>
         ) : (
@@ -214,7 +211,10 @@ export default function BlueprintHome() {
             <button className="v4-btn" type="submit">Send</button>
           </form>
         )}
-        <p className="v4-begin__alt">Prefer to talk? Call <a className="v4-link" href={company.phoneHref}>{company.phone}</a>.</p>
+        <p className="v4-begin__alt">
+          Prefer to talk? Call <a className="v4-link" href={company.phoneHref}>{company.phone}</a> or write to{" "}
+          <a className="v4-link" href={`mailto:${company.email}`}>{company.email}</a>.
+        </p>
       </section>
     </div>
   );

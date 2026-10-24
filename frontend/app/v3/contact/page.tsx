@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { onPageEnter } from "@/components/motion/onEnter";
 import { gsap, SplitText, useGSAP, ease, reducedMotion } from "@/lib/gsap";
-import { company, services } from "@/lib/content";
+import { askedService, company, pages, services } from "@/lib/copy";
 
-const budgets = ["Under $25k", "$25k–75k", "$75k–200k", "$200k+", "Not sure yet"];
+const budgets = pages.contact.budgets;
 const timelines = ["This month", "This quarter", "Later this year", "Just exploring"];
 const steps = ["What", "When", "Who"] as const;
 
@@ -15,6 +15,14 @@ export default function KineticContact() {
   const [step, setStep] = useState(0);
   const [data, setData] = useState({ service: "", budget: "", when: "" });
   const [sent, setSent] = useState(false);
+
+  /* arriving from a service page preselects that service */
+  useEffect(() => {
+    const s = services.find((x) => x.slug === askedService());
+    if (!s) return;
+    const id = requestAnimationFrame(() => setData((d) => ({ ...d, service: s.name })));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   useGSAP(
     () => {
@@ -54,7 +62,9 @@ export default function KineticContact() {
       <header className="v3-sub__head">
         <h1 className="v3-sub__title">Let&rsquo;s talk</h1>
         <p className="v3-sub__lede">
-          Three quick steps. Or call <a href={company.phoneHref} className="v3-u">{company.phone}</a>.
+          Three quick steps. {pages.contact.lede} Or write to{" "}
+          <a href={`mailto:${company.email}`} className="v3-u">{company.email}</a>, or call{" "}
+          <a href={company.phoneHref} className="v3-u">{company.phone}</a>.
         </p>
       </header>
 
@@ -71,11 +81,11 @@ export default function KineticContact() {
         {sent ? (
           <div className="v3-brief__step" role="status">
             <h2>Brief received</h2>
-            <p>Thank you. An engineer will reply within one working day.</p>
+            <p>{pages.contact.thanks} An engineer will reply within one working day.</p>
           </div>
         ) : step === 0 ? (
           <fieldset className="v3-brief__step">
-            <legend>What do you need built?</legend>
+            <legend>{pages.contact.servicesQuestion.replace(" Pick any.", "")}</legend>
             <div className="v3-choices">
               {services.map((s) => (
                 <label key={s.slug} className="v3-choice">

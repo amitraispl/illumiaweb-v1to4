@@ -1,16 +1,19 @@
 /*
- * The building: a system drawn as an isometric stack of floors.
- * Security is the foundation, the interface is the roof.
+ * The building: a system drawn as an isometric stack of floors, one per service.
+ * Integrations are the foundation everything plugs into; design is the facade on top.
  * Pure SVG so it can be drawn stroke by stroke and lit floor by floor.
  */
 
-export const floors = [
-  { key: "security", name: "Security", line: "The foundation", body: "Identity, secrets, threat models and audit trails, poured first so everything above stands on them." },
-  { key: "infra", name: "Infrastructure", line: "The structure", body: "Proxmox or public cloud, Kubernetes and code-defined networks, documented in NetBox." },
-  { key: "data", name: "Data", line: "The services floor", body: "PostgreSQL, queues and pipelines, modelled so reports agree with each other." },
-  { key: "api", name: "Services and APIs", line: "The working floors", body: "The business logic: ERPNext modules, integrations, AI assistants with a human in the loop." },
-  { key: "ui", name: "Interface", line: "The facade", body: "What people touch: web, mobile and the screens your team lives in all day." },
-] as const;
+import { services } from "@/lib/copy";
+
+/* foundation first: the order the floors are drawn, bottom to top */
+const ORDER = ["integrations", "web", "mobile", "design"];
+const ROLE = ["The foundation", "The structure", "The working floors", "The facade"];
+
+export const floors = ORDER.map((slug, i) => {
+  const s = services.find((x) => x.slug === slug)!;
+  return { key: s.slug, name: s.name, line: `${ROLE[i]} · ${s.promise}`, body: s.short };
+});
 
 const W = 150; // half-width of a slab
 const D = W / 2; // half-depth (2:1 isometric)
@@ -36,7 +39,7 @@ function slab(i: number) {
 
 export function Building({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 400 420" role="img" aria-label="A system drawn as a five-floor building, security at the base and the interface on top">
+    <svg className={className} viewBox="0 0 400 420" role="img" aria-label="A system drawn as a four-floor building: integrations at the base, then web, mobile, and design on top">
       {/* columns tying the floors together */}
       <g className="b-cols">
         {[[CX - W, 0], [CX, D], [CX + W, 0]].map(([x, dy], i) => (

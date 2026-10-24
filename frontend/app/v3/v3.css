@@ -297,3 +297,43 @@ html.v3-paused .v3 * { animation-play-state: paused !important; }
 .v3-hero__title { font-size: clamp(3.4rem, 11.4vw, 13rem) !important; }
 .v3-card h3 { font-size: clamp(2.4rem, 5.4vw, 5.6rem) !important; }
 .v3 .k { will-change: transform; }
+
+/* ---------- V5 content pass: Home / Services / Service / Process / Contact ---------- */
+.v3-hero__kicker { display: block; margin-bottom: 0.3em; font-size: clamp(1rem, 2.2vw, 1.8rem); font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--soft); font-variation-settings: "wdth" 100; }
+.v3-hero__title .v3-hero__row { font-size: clamp(3rem, 9.4vw, 9rem); }
+.v3-hero__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.v3-card__tag { font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.8; }
+.v3-card__promise { font-weight: 900; font-size: clamp(1.2rem, 2vw, 1.7rem); line-height: 1.1; text-transform: uppercase; font-variation-settings: "wdth" 80; }
+.v3-card .v3-pill { justify-self: start; }
+.v3-card ul { margin-top: 6px; }
+.v3-rail__cover--file { display: flex; align-items: center; aspect-ratio: auto; min-height: 230px; padding: 24px; }
+.v3-rail__cover--file pre { margin: 0; font: 600 0.85rem/1.9 ui-monospace, Menlo, monospace; white-space: pre; overflow: hidden; color: var(--soft); }
+.v3-rail__cover--file code { display: block; }
+.v3-agile { padding: clamp(100px, 12vw, 180px) var(--g); display: grid; gap: 24px; }
+.v3-agile .v3-head { margin-bottom: 0; }
+.v3-agile .v3-head h2 { max-width: 16ch; }
+.v3-agile__lede { max-width: 52ch; font-size: 1.2rem; color: var(--soft); font-weight: 500; }
+.v3-agile__grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.v3-svc__body { display: grid; gap: 12px; align-content: start; }
+.v3-svc__body h3 { font-size: 1.3rem !important; }
+.v3-svc__body .v3-pill { justify-self: start; }
+.v3-svc__name--sm { font-size: clamp(2rem, 4.6vw, 4.6rem) !important; }
+@media (min-width: 1000px) { .v3-svc__grid--two { grid-template-columns: 1fr 1fr; } }
+ol.v3-svcs { list-style: none; margin: 0; }
+.v3-steps--three { counter-reset: none; }
+.v3-sub__note { max-width: 56ch; color: var(--soft); font-weight: 500; }
+.v3-sub__title--svc { font-size: clamp(2.6rem, 9vw, 10rem) !important; }
+.v3-sub__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+.v3-closing { max-width: 22ch; font-size: clamp(2rem, 4.4vw, 4.4rem) !important; line-height: 1 !important; }
+.v3-next { padding: 0 var(--g) clamp(100px, 12vw, 180px); }
+.v3-next__link { display: grid; gap: 10px; padding: clamp(28px, 4vw, 56px); border-radius: 28px; background: var(--red); transition: background 0.4s; }
+.v3-next__link:hover { background: #fff; color: var(--char); }
+.v3-next__link small { font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; }
+.v3-next__name { --w: 125; font-weight: 900; text-transform: uppercase; font-size: clamp(2.6rem, 7vw, 7rem); line-height: 0.9; font-variation-settings: "wdth" var(--w); }
+.v3-next__link span { font-weight: 800; }
+.v3-foot__about { max-width: 34ch; color: var(--soft); }
+.v3-foot__talk { display: grid; gap: 4px; align-content: start; font-weight: 700; }
+.v3-foot__talk address { font-style: normal; font-weight: 400; color: var(--soft); display: grid; margin-top: 8px; }
+/* agile cards share the stack cards' colours but not their sticky stacking */
+.v3-agile__card { display: grid; align-content: start; gap: 14px; min-height: 260px; padding: clamp(24px, 3vw, 40px); border-radius: 28px; }
+.v3-agile__card h3 { font-size: clamp(1.4rem, 2vw, 2rem) !important; }

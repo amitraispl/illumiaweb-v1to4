@@ -3,11 +3,11 @@
 import { useRef } from "react";
 import { Beacon } from "./Beacon";
 import { TLink } from "@/components/motion/Transition";
-import { CodePane, ProjectCover, sampleCode } from "@/components/ui/Fragments";
+import { CodePane, sampleCode } from "@/components/ui/Fragments";
 import { magnetic, directionalFill, countUp } from "@/components/motion/effects";
 import { onPageEnter } from "@/components/motion/onEnter";
 import { gsap, ScrollTrigger, SplitText, useGSAP, ease, reducedMotion } from "@/lib/gsap";
-import { buildLog, company, process, projects, services, stack } from "@/lib/content";
+import { agile, buildLog, intro, ownership, pages, process, services, stack, stats } from "@/lib/copy";
 
 export default function BeaconHome() {
   const root = useRef<HTMLDivElement>(null);
@@ -111,7 +111,7 @@ export default function BeaconHome() {
         },
       });
 
-      /* --- work cards open from a diamond --- */
+      /* --- ownership cards open from a diamond --- */
       gsap.utils.toArray<HTMLElement>(".v1-work__card").forEach((c, i) => {
         gsap.fromTo(c.querySelector(".v1-work__cover"),
           { clipPath: "polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%)" },
@@ -153,24 +153,22 @@ export default function BeaconHome() {
           ))}
         </div>
         <div className="v1-hero__inner">
+          <p className="v1-eyebrow v1-hero__eyebrow">{intro.eyebrow}</p>
           <h1 id="v1-title">
-            <span className="line">We illuminate</span>
-            <span className="line">the <span className="decode">build.</span></span>
+            <span className="line">{intro.title[0]}</span>
+            <span className="line">{intro.title[1]} <span className="decode">{intro.title[2]}</span></span>
           </h1>
-          <p className="v1-hero__sub">
-            Illumia&rsquo;s software wing designs, builds and secures web, mobile, ERP and AI products, then
-            keeps them running across six time zones.
-          </p>
+          <p className="v1-hero__sub">{intro.lede}</p>
           <div className="v1-hero__actions">
             <TLink href="/v1/contact" className="v1-btn v1-btn--solid" data-magnetic label="Contact">
-              <span>Start a project</span>
+              <span>{pages.hero.primary}</span>
             </TLink>
-            <TLink href="/v1/work" className="v1-btn" data-magnetic label="Work">
-              <span>See the work</span>
+            <TLink href="/v1/services" className="v1-btn" data-magnetic label="Services">
+              <span>{pages.hero.secondary}</span>
             </TLink>
           </div>
           <dl className="v1-hero__meta">
-            {company.stats.slice(0, 3).map((s) => (
+            {stats.slice(0, 3).map((s) => (
               <div key={s.label}>
                 <dt>{s.label}</dt>
                 <dd><span data-count={s.value}>{s.value}</span>{s.suffix}</dd>
@@ -182,27 +180,30 @@ export default function BeaconHome() {
       </section>
 
       {/* STATEMENT */}
-      <section className="v1-statement" aria-label="How we think">
-        <p>
-          Most software is built in the dark. We work in the light: you see the plan, the code, the
-          tests and the bill, every two weeks.
-        </p>
+      <section className="v1-statement" aria-label="Our philosophy">
+        <p>{intro.philosophy}</p>
+        <small className="v1-statement__by">{pages.philosophyBy}</small>
       </section>
 
       {/* SERVICES TRACK */}
       <section className="v1-track" aria-labelledby="v1-services-title">
         <div className="v1-track__head">
-          <h2 id="v1-services-title">Six ways we build</h2>
+          <div>
+            <p className="v1-eyebrow">01 · {pages.servicesHead.eyebrow}</p>
+            <h2 id="v1-services-title">{pages.servicesHead.title}</h2>
+          </div>
           <TLink href="/v1/services" className="v1-link" label="Services">All services</TLink>
         </div>
         <div className="v1-track__rail">
-          {services.map((s) => (
+          {services.map((s, i) => (
             <article key={s.slug} className="v1-panel">
+              <p className="v1-panel__tag">0{i + 1} · {s.tag}</p>
               <h3 className="v1-panel__name">{s.name}</h3>
               <p className="v1-panel__body">{s.short}</p>
               <ul role="list">
-                {s.deliverables.slice(0, 4).map((d) => <li key={d}>{d}</li>)}
+                {s.highlights.map((d) => <li key={d}>{d}</li>)}
               </ul>
+              <TLink href={`/v1/services/${s.slug}`} className="v1-link v1-panel__more" label={s.name}>Read more</TLink>
             </article>
           ))}
         </div>
@@ -212,8 +213,9 @@ export default function BeaconHome() {
       {/* PROCESS (dark → light) */}
       <section className="v1-process" aria-labelledby="v1-process-title">
         <div className="v1-process__intro">
-          <h2 id="v1-process-title">The path to launch</h2>
-          <p>Six stages, each with something you can hold: a brief, a prototype, a release, a report.</p>
+          <p className="v1-eyebrow">02 · {pages.processHead.eyebrow}</p>
+          <h2 id="v1-process-title">{pages.processHead.title}</h2>
+          <p>{pages.processPage.lede}</p>
           <div className="v1-process__code"><CodePane lines={sampleCode} title="deploy.ts" /></div>
         </div>
         <div className="v1-process__list">
@@ -221,11 +223,11 @@ export default function BeaconHome() {
             <path className="v1-process__path" d="M5 0 V600" />
           </svg>
           <ol>
-            {process.map((p) => (
+            {process.map((p, i) => (
               <li key={p.name} className="v1-step">
                 <div className="v1-step__head">
                   <h3>{p.name}</h3>
-                  <span>{p.weeks}</span>
+                  <span>{i === process.length - 1 ? `↺ ${pages.processPage.loop}` : `0${i + 1}`}</span>
                 </div>
                 <p>{p.body}</p>
               </li>
@@ -246,22 +248,26 @@ export default function BeaconHome() {
         ))}
       </section>
 
-      {/* WORK */}
+      {/* OWNERSHIP */}
       <section className="v1-work" aria-labelledby="v1-work-title">
         <div className="v1-work__head">
-          <h2 id="v1-work-title">Recent builds</h2>
-          <TLink href="/v1/work" className="v1-link" label="Work">Every project</TLink>
+          <div>
+            <p className="v1-eyebrow">03 · {pages.ownershipHead.eyebrow}</p>
+            <h2 id="v1-work-title">{pages.ownershipHead.title}</h2>
+          </div>
+          <TLink href="/v1/process" className="v1-link" label="Process">How we work</TLink>
         </div>
-        <div className="v1-work__grid">
-          {projects.slice(0, 3).map((p) => (
-            <TLink key={p.slug} href="/v1/work" className="v1-work__card" data-cursor="view" label={p.name}>
-              <div className="v1-work__cover"><ProjectCover kind={p.cover} /></div>
-              <div className="v1-work__meta">
-                <h3>{p.name}</h3>
-                <p>{p.summary}</p>
-                <span>{p.sector} · Concept</span>
+        <div className="v1-work__grid v1-work__grid--four">
+          {ownership.map((o) => (
+            <article key={o.name} className="v1-work__card">
+              <div className="v1-work__cover v1-work__cover--file">
+                <pre aria-hidden="true">{o.snippet.map((l) => <code key={l} className={l.startsWith("✓") ? "is-ok" : undefined}>{l}</code>)}</pre>
               </div>
-            </TLink>
+              <div className="v1-work__meta">
+                <h3>{o.name}</h3>
+                <p>{o.body}</p>
+              </div>
+            </article>
           ))}
         </div>
       </section>
@@ -269,13 +275,14 @@ export default function BeaconHome() {
       {/* PROOF */}
       <section className="v1-proof" aria-labelledby="v1-proof-title">
         <div className="v1-proof__text">
-          <h2 id="v1-proof-title">Shipped, signed, watched</h2>
-          <p>
-            Every release goes through the same gates: tests, a security scan, a signed container and a
-            staged rollout. You get the log, not a promise.
-          </p>
+          <p className="v1-eyebrow">04 · {pages.agileHead.eyebrow}</p>
+          <h2 id="v1-proof-title">{agile.title}</h2>
+          <p>{agile.body}</p>
+          <ul className="v1-proof__points" role="list">
+            {agile.points.map((x) => <li key={x.name}><b>{x.name}.</b> {x.body}</li>)}
+          </ul>
           <dl className="v1-proof__stats">
-            {company.stats.map((s) => (
+            {stats.map((s) => (
               <div key={s.label}>
                 <dd><span data-count={s.value}>{s.value}</span>{s.suffix}</dd>
                 <dt>{s.label}</dt>
@@ -284,7 +291,7 @@ export default function BeaconHome() {
           </dl>
         </div>
         <div className="v1-log" data-ui>
-          <div className="v1-log__bar"><i /><i /><i /><b>release.log</b></div>
+          <div className="v1-log__bar"><i /><i /><i /><b>sprint-07.log</b></div>
           <pre className="v1-log__pre">
             <code>
               {buildLog.map((l) => (

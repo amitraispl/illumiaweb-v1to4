@@ -1,15 +1,24 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Clock } from "@/components/motion/Clock";
 import { onPageEnter } from "@/components/motion/onEnter";
 import { gsap, SplitText, useGSAP, ease, reducedMotion } from "@/lib/gsap";
-import { company, services } from "@/lib/content";
+import { askedService, company, pages, services } from "@/lib/copy";
 
 /* A letter you fill in: the brief reads as a sentence with blanks. */
 export default function EditorialContact() {
   const root = useRef<HTMLDivElement>(null);
   const [sent, setSent] = useState(false);
+  const [svc, setSvc] = useState("");
+
+  /* arriving from a service chapter fills in that blank */
+  useEffect(() => {
+    const s = services.find((x) => x.slug === askedService());
+    if (!s) return;
+    const id = requestAnimationFrame(() => setSvc(s.name.toLowerCase()));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   useGSAP(
     () => {
@@ -37,6 +46,9 @@ export default function EditorialContact() {
     <div ref={root} className="v2-page v2-sub">
       <header className="v2-sub__head">
         <h1 className="v2-sub__title">Write <em>to us</em></h1>
+        <p className="v2-sub__lede">
+          {pages.contact.lede} Or write to <a className="v2-ul" href={`mailto:${company.email}`}>{company.email}</a>.
+        </p>
       </header>
 
       <div className="v2-contact">
@@ -54,7 +66,7 @@ export default function EditorialContact() {
               We need help with{" "}
               <label>
                 <span className="sr-only">Service</span>
-                <select name="service" defaultValue="">
+                <select name="service" value={svc} onChange={(e) => setSvc(e.target.value)}>
                   <option value="" disabled>choose a service</option>
                   {services.map((s) => <option key={s.slug}>{s.name.toLowerCase()}</option>)}
                 </select>
@@ -71,13 +83,14 @@ export default function EditorialContact() {
         )}
 
         <aside className="v2-desk" aria-label="Offices">
-          <h2>Offices</h2>
+          <h2>{pages.contact.reachTitle}</h2>
           <ul role="list">
             {company.offices.map((o) => (
               <li key={o.country}><span>{o.country}</span><Clock tz={o.tz} /></li>
             ))}
           </ul>
           <p><a className="v2-ul" href={company.phoneHref}>{company.phone}</a></p>
+          <p><a className="v2-ul" href={`mailto:${company.email}`}>{company.email}</a></p>
           <address>{company.address.join(", ")}</address>
         </aside>
       </div>

@@ -1,13 +1,22 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { onPageEnter } from "@/components/motion/onEnter";
 import { gsap, SplitText, useGSAP, ease, reducedMotion } from "@/lib/gsap";
-import { company, services } from "@/lib/content";
+import { askedService, company, pages, services } from "@/lib/copy";
 import { Overlap } from "../Overlap";
 
 export default function BlueprintContact() {
   const root = useRef<HTMLDivElement>(null);
+  const [svc, setSvc] = useState("");
+
+  /* arriving from a service page preselects it */
+  useEffect(() => {
+    const s = services.find((x) => x.slug === askedService());
+    if (!s) return;
+    const id = requestAnimationFrame(() => setSvc(s.name));
+    return () => cancelAnimationFrame(id);
+  }, []);
   const [sent, setSent] = useState(false);
 
   useGSAP(
@@ -35,7 +44,10 @@ export default function BlueprintContact() {
   return (
     <div ref={root} className="v4-page v4-sub">
       <header className="v4-sub__head">
-        <h1 className="v4-sub__title">Plan <em>your</em> build</h1>
+        <h1 className="v4-sub__title">Start <em>a</em> project</h1>
+        <p className="v4-sub__lede">
+          {pages.contact.lede} Or write to <a className="v4-link" href={`mailto:${company.email}`}>{company.email}</a>.
+        </p>
       </header>
       <div className="v4-contact">
         {sent ? (
@@ -47,13 +59,13 @@ export default function BlueprintContact() {
             <label><span>Work email</span><input name="email" type="email" required autoComplete="email" /></label>
             <label><span>Phone</span><input name="phone" type="tel" autoComplete="tel" /></label>
             <label className="v4-enquire__wide">
-              <span>Practice</span>
-              <select name="service" defaultValue="">
+              <span>Service</span>
+              <select name="service" value={svc} onChange={(e) => setSvc(e.target.value)}>
                 <option value="" disabled>Choose one</option>
                 {services.map((s) => <option key={s.slug}>{s.name}</option>)}
               </select>
             </label>
-            <label className="v4-enquire__wide"><span>What should it do?</span><textarea name="brief" rows={4} required /></label>
+            <label className="v4-enquire__wide"><span>About the project</span><textarea name="brief" rows={4} required placeholder={pages.contact.briefPlaceholder} /></label>
             <button className="v4-btn" type="submit">Send enquiry</button>
           </form>
         )}
@@ -61,6 +73,7 @@ export default function BlueprintContact() {
           <h2>Headquarters</h2>
           <address>{company.address.map((l) => <span key={l}>{l}</span>)}</address>
           <a className="v4-link" href={company.phoneHref}>{company.phone}</a>
+          <a className="v4-link" href={`mailto:${company.email}`}>{company.email}</a>
           <Overlap />
         </aside>
       </div>

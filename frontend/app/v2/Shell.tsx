@@ -7,13 +7,10 @@ import { clearEnter, signalEnter } from "@/components/motion/onEnter";
 import { TLink, TransitionProvider, type TransitionHooks } from "@/components/motion/Transition";
 import { Clock } from "@/components/motion/Clock";
 import { gsap, SplitText, useGSAP, ease, finePointer, reducedMotion } from "@/lib/gsap";
-import { company } from "@/lib/content";
+import { company, navFor, pages, services } from "@/lib/copy";
 
-const nav = [
-  { href: "/v2/services", label: "Services" },
-  { href: "/v2/work", label: "Work" },
-  { href: "/v2/contact", label: "Contact" },
-];
+/* the masthead is the way home, so the nav lists the other three */
+const nav = navFor("v2").slice(1);
 
 export function Shell({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
@@ -115,13 +112,15 @@ export function Shell({ children }: { children: ReactNode }) {
           <footer className="v2-foot">
             <div className="v2-foot__top">
               <p className="v2-foot__lead">
-                Have a system in mind? <TLink href="/v2/contact" className="v2-ul" label="Contact">Write to us</TLink> or call{" "}
+                {pages.footer.ask} <TLink href="/v2/contact" className="v2-ul" label="Contact">{pages.footer.cta}</TLink>, write to{" "}
+                <a href={`mailto:${company.email}`} className="v2-ul">{company.email}</a> or call{" "}
                 <a href={company.phoneHref} className="v2-ul">{company.phone}</a>.
               </p>
               <ul role="list" className="v2-foot__links">
-                {nav.map((n) => (
-                  <li key={n.href}><TLink href={n.href}>{n.label}</TLink></li>
+                {services.map((s) => (
+                  <li key={s.slug}><TLink href={`/v2/services/${s.slug}`} label={s.name}>{s.name}</TLink></li>
                 ))}
+                <li><TLink href="/v2/process" label="Process">How we work</TLink></li>
                 <li><a href={company.linkedin} target="_blank" rel="noreferrer">LinkedIn</a></li>
               </ul>
               <address>{company.address.map((l) => <span key={l}>{l}</span>)}</address>
@@ -129,7 +128,7 @@ export function Shell({ children }: { children: ReactNode }) {
             <p className="v2-foot__mast" aria-label="Illumia">Illumia</p>
             <div className="v2-foot__base">
               <em>{company.tagline}</em>
-              <span>© 2026 Illumia Solutions</span>
+              <span>{pages.footer.legal}</span>
             </div>
           </footer>
 

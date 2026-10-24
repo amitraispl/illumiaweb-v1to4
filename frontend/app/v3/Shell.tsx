@@ -6,14 +6,9 @@ import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { clearEnter, signalEnter } from "@/components/motion/onEnter";
 import { TLink, TransitionProvider, type TransitionHooks } from "@/components/motion/Transition";
 import { gsap, useGSAP, ease, finePointer, reducedMotion } from "@/lib/gsap";
-import { company } from "@/lib/content";
+import { company, navFor, pages, services } from "@/lib/copy";
 
-const nav = [
-  { href: "/v3", label: "Home" },
-  { href: "/v3/services", label: "Services" },
-  { href: "/v3/work", label: "Work" },
-  { href: "/v3/contact", label: "Contact" },
-];
+const nav = navFor("v3");
 
 /* "Pause motion": stops every looping animation on the page (WCAG 2.2.2) */
 const MotionContext = createContext(true);
@@ -165,15 +160,21 @@ export function Shell({ children }: { children: ReactNode }) {
             <footer className="v3-foot">
               <div className="v3-foot__grid">
                 <img src="/brand/illumia-logo-light.svg" alt="Illumia Solutions" width={160} height={44} />
-                <nav aria-label="Footer">
-                  {nav.map((n) => <TLink key={n.href} href={n.href}>{n.label}</TLink>)}
+                <p className="v3-foot__about">{pages.footer.about}</p>
+                <nav aria-label="Services">
+                  {services.map((s) => <TLink key={s.slug} href={`/v3/services/${s.slug}`} label={s.name}>{s.name}</TLink>)}
+                  <TLink href="/v3/process" label="Process">How we work</TLink>
                 </nav>
-                <address>{company.address.map((l) => <span key={l}>{l}</span>)}</address>
+                <div className="v3-foot__talk">
+                  <a href={`mailto:${company.email}`}>{company.email}</a>
+                  <a href={company.phoneHref}>{company.phone}</a>
+                  <address>{company.address.map((l) => <span key={l}>{l}</span>)}</address>
+                </div>
               </div>
               <p className="v3-foot__word" aria-hidden="true">Illumia</p>
               <div className="v3-foot__base">
                 <em>{company.tagline}</em>
-                <span>© 2026 Illumia Solutions</span>
+                <span>{pages.footer.legal}</span>
                 <a href="#main" className="v3-foot__top">Back to top</a>
               </div>
             </footer>

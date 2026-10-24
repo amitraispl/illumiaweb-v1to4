@@ -6,11 +6,12 @@ import { ProjectCover, CodePane, sampleCode } from "@/components/ui/Fragments";
 import { onPageEnter } from "@/components/motion/onEnter";
 import { countUp } from "@/components/motion/effects";
 import { gsap, ScrollTrigger, SplitText, useGSAP, ease, reducedMotion, finePointer } from "@/lib/gsap";
-import { company, process, projects, services, type Project } from "@/lib/content";
+import type { Project } from "@/lib/content";
+import { agile, intro, ownership, pages, process, services, stats } from "@/lib/copy";
 
 /* which interface fragment previews each service */
 const coverFor: Record<string, Project["cover"]> = {
-  product: "intake", erp: "erp", ai: "assistant", platform: "migrate", secure: "network", modernise: "field",
+  design: "intake", mobile: "field", web: "erp", integrations: "network",
 };
 
 export default function EditorialHome() {
@@ -102,7 +103,7 @@ export default function EditorialHome() {
         onUpdate: (st) => gsap.to(band, { timeScale: st.direction * (1 + Math.min(4, Math.abs(st.getVelocity()) / 800)), duration: 0.4, overwrite: true }),
       });
 
-      /* --- work: covers open from a horizontal slit, image drifts inside --- */
+      /* --- ownership: each file opens from a horizontal slit, its text drifts inside --- */
       gsap.utils.toArray<HTMLElement>(".v2-work__item").forEach((it) => {
         gsap.fromTo(it.querySelector(".v2-work__cover"), { clipPath: "inset(50% 0 50% 0)" }, {
           clipPath: "inset(0% 0 0% 0)", duration: 1.4, ease: ease.wipe,
@@ -137,20 +138,18 @@ export default function EditorialHome() {
       {/* HERO */}
       <section className="v2-hero" aria-labelledby="v2-title">
         <h1 id="v2-title" className="v2-hero__title">
-          <span className="v2-hero__l1">Software,</span>
-          <span className="v2-hero__l2"><em>set</em> well</span>
+          <span className="v2-hero__l1">{intro.title[0]},</span>
+          <span className="v2-hero__l2"><em>{intro.title[1]}</em> {intro.title[2]}</span>
         </h1>
         <hr className="v2-hero__rule" />
         <div className="v2-hero__grid">
-          <p className="v2-hero__lede">
-            The software wing of Illumia Solutions. We design, build and secure web, mobile, ERP and AI
-            products for companies that need them to work on Monday morning.
-          </p>
+          <p className="v2-hero__lede">{intro.lede}</p>
           <div className="v2-hero__cta">
-            <TLink href="/v2/contact" className="v2-btn" label="Contact">Start a project</TLink>
+            <TLink href="/v2/contact" className="v2-btn" label="Contact">{pages.hero.primary}</TLink>
+            <TLink href="/v2/services" className="v2-ul" label="Services">{pages.hero.secondary}</TLink>
           </div>
           <dl className="v2-hero__aside">
-            {company.stats.slice(0, 2).map((s) => (
+            {stats.slice(0, 2).map((s) => (
               <div key={s.label}>
                 <dd><span data-count={s.value}>{s.value}</span>{s.suffix}</dd>
                 <dt>{s.label}</dt>
@@ -164,37 +163,32 @@ export default function EditorialHome() {
       <section className="v2-open" aria-labelledby="v2-open-title">
         <div className="v2-open__frame"><CodePane lines={sampleCode} title="deploy.ts" /></div>
         <h2 id="v2-open-title" className="v2-open__title">
-          <span className="v2-open__left">Built in</span> <span className="v2-open__right"><em>the open</em></span>
+          <span className="v2-open__left">Full</span> <span className="v2-open__right"><em>transparency</em></span>
         </h2>
       </section>
 
       {/* STATEMENT */}
-      <section className="v2-intro" aria-label="Our approach">
-        <p className="v2-ink">
-          You see the plan, the code, the tests and the invoice every two weeks. Nothing is hidden, so
-          nothing surprises you on launch day.
-        </p>
+      <section className="v2-intro" aria-label="Our philosophy">
+        <p className="v2-ink">{intro.philosophy}</p>
         <div className="v2-intro__side">
-          <p>
-            Engineers who also hold {company.certifications.join(", ")} write the code and sign the security
-            review. Partners include {company.partners.slice(0, 3).join(", ")}.
-          </p>
+          <p>{intro.about}</p>
+          <p className="v2-intro__by">{pages.philosophyBy}</p>
         </div>
       </section>
 
       {/* SERVICES INDEX */}
       <section className="v2-services" aria-labelledby="v2-svc-title">
         <div className="v2-services__head">
-          <h2 id="v2-svc-title">What we make</h2>
+          <h2 id="v2-svc-title">{pages.servicesHead.title}</h2>
           <TLink href="/v2/services" className="v2-ul" label="Services">Read the full index</TLink>
         </div>
         <div className="v2-index">
         <ul role="list">
           {services.map((s, i) => (
             <li key={s.slug} className="v2-index__row" onPointerEnter={() => setPreview(i)}>
-              <TLink href={`/v2/services#${s.slug}`} className="v2-index__link" data-cursor="Read" label="Services">
+              <TLink href={`/v2/services/${s.slug}`} className="v2-index__link" data-cursor="Read" label={s.name}>
                 <span className="v2-index__name">{s.name}</span>
-                <span className="v2-index__short">{s.short}</span>
+                <span className="v2-index__short"><em>{s.promise}</em> {s.short}</span>
               </TLink>
             </li>
           ))}
@@ -214,38 +208,52 @@ export default function EditorialHome() {
         </div>
       </section>
 
-      {/* WORK */}
+      {/* OWNERSHIP */}
       <section className="v2-work" aria-labelledby="v2-work-title">
         <div className="v2-services__head">
-          <h2 id="v2-work-title">Recent work</h2>
-          <TLink href="/v2/work" className="v2-ul" label="Work">All projects</TLink>
+          <h2 id="v2-work-title">{pages.ownershipHead.title}</h2>
+          <TLink href="/v2/process" className="v2-ul" label="Process">How we work</TLink>
         </div>
         <div className="v2-work__grid">
-          {projects.slice(0, 4).map((p) => (
-            <TLink key={p.slug} href="/v2/work" className="v2-work__item" data-cursor="View" label={p.name}>
-              <div className="v2-work__cover"><ProjectCover kind={p.cover} /></div>
-              <div className="v2-work__meta">
-                <h3>{p.name}</h3>
-                <p>{p.summary}</p>
-                <span>{p.sector}, concept</span>
+          {ownership.map((o) => (
+            <article key={o.name} className="v2-work__item">
+              <div className="v2-work__cover v2-work__cover--file">
+                <pre aria-hidden="true">{o.snippet.map((l) => <code key={l}>{l}</code>)}</pre>
               </div>
-            </TLink>
+              <div className="v2-work__meta">
+                <h3>{o.name}</h3>
+                <p>{o.body}</p>
+              </div>
+            </article>
           ))}
         </div>
       </section>
 
       {/* PROCESS SHEETS */}
       <section className="v2-process" aria-labelledby="v2-process-title">
-        <h2 id="v2-process-title" className="v2-process__title">How a project runs</h2>
+        <h2 id="v2-process-title" className="v2-process__title">{pages.processHead.title}</h2>
         <div className="v2-sheets">
-          {process.map((p) => (
+          {process.map((p, i) => (
             <article key={p.name} className="v2-sheet">
               <h3>{p.name}</h3>
               <p>{p.body}</p>
-              <span>{p.weeks}</span>
+              <span>{i === process.length - 1 ? `↺ ${pages.processPage.loop}` : `Stage ${i + 1} of ${process.length}`}</span>
             </article>
           ))}
         </div>
+      </section>
+
+      {/* AGILE */}
+      <section className="v2-agile" aria-labelledby="v2-agile-title">
+        <div className="v2-services__head">
+          <h2 id="v2-agile-title">{agile.title}</h2>
+        </div>
+        <p className="v2-agile__lede">{agile.body}</p>
+        <ol className="v2-agile__list" role="list">
+          {agile.points.map((x, i) => (
+            <li key={x.name}><small>0{i + 1}</small><h3>{x.name}</h3><p>{x.body}</p></li>
+          ))}
+        </ol>
       </section>
     </div>
   );

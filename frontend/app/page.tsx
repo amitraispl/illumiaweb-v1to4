@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { Bricolage_Grotesque, Instrument_Serif, Archivo, Cormorant_Garamond, Carlito } from "next/font/google";
+import { Bricolage_Grotesque, Instrument_Serif, Archivo, Cormorant_Garamond, Unbounded, Syne, Carlito } from "next/font/google";
 import s from "./picker.module.css";
 
 const f1 = Bricolage_Grotesque({ subsets: ["latin"], weight: "600" });
 const f2 = Instrument_Serif({ subsets: ["latin"], weight: "400", style: ["normal", "italic"] });
 const f3 = Archivo({ subsets: ["latin"], axes: ["wdth"] });
 const f4 = Cormorant_Garamond({ subsets: ["latin"], weight: "500", style: ["italic"] });
+const f5 = Unbounded({ subsets: ["latin"], weight: "800" });
+const f6 = Syne({ subsets: ["latin"], weight: "800" });
 const ui = Carlito({ subsets: ["latin"], weight: ["400", "700"] });
 
 const versions = [
@@ -45,6 +47,24 @@ const versions = [
     type: "Cormorant Garamond · Manrope",
     tone: s.blueprint,
   },
+  {
+    href: "/v5",
+    name: "Lumen",
+    font: f5.className,
+    line: "Tens of thousands of points of light that rebuild themselves into each section as you scroll.",
+    traits: ["GPU particle field", "Software-shaped particles", "3D service ring", "Fly-through ownership tunnel", "Live terminal", "Light / dark toggle"],
+    type: "Unbounded · Carlito · Geist Mono",
+    tone: s.lumen,
+  },
+  {
+    href: "/v6",
+    name: "Flux",
+    font: f6.className,
+    line: "Fluid teams, solid software. A live ink simulation under every page, and things you can throw.",
+    traits: ["GPU fluid simulation", "Raymarched liquid-to-solid mark", "Throwable physics services", "Scroll-driven release pipeline", "Endless drag board", "Generative sound"],
+    type: "Syne · Carlito · Space Mono",
+    tone: s.flux,
+  },
 ];
 
 export default function Picker() {
@@ -52,10 +72,10 @@ export default function Picker() {
     <main className={`${s.page} ${ui.className}`}>
       <header className={s.head}>
         <img src="/brand/illumia-logo-light.svg" alt="Illumia Solutions" width={150} height={40} />
-        <h1>Software Development, four directions</h1>
+        <h1>Software Development, six directions</h1>
         <p>
-          The same content and brand colours, built four ways. Open each one and click through its four pages:
-          home, services, work and contact.
+          The same content and brand colours, built six ways. Open each one and click through its pages:
+          home, services, a page per service, process and contact.
         </p>
       </header>
       <ul className={s.grid} role="list">

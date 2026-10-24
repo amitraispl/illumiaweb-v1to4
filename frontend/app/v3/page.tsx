@@ -2,18 +2,14 @@
 
 import { useEffect, useRef } from "react";
 import { TLink } from "@/components/motion/Transition";
-import { ProjectCover } from "@/components/ui/Fragments";
 import { onPageEnter } from "@/components/motion/onEnter";
 import { magnetic, countUp } from "@/components/motion/effects";
 import { gsap, ScrollTrigger, SplitText, useGSAP, ease, reducedMotion, finePointer } from "@/lib/gsap";
-import { company, projects, services } from "@/lib/content";
+import { agile, intro, ownership, pages, process, services, stack, stats } from "@/lib/copy";
 import { useMotionOn } from "./Shell";
 
-const chapters = [
-  { word: "Idea", body: "Two weeks of workshops turn a hunch into a written brief, a clickable prototype and a fixed quote." },
-  { word: "Build", body: "Two-week sprints. A working demo every Friday. Tests, security scans and code review on every merge." },
-  { word: "Launch", body: "Staged rollout, monitoring in place, a rollback rehearsed. Then support across six time zones." },
-];
+/* three acts of the seven-stage cycle: where it starts, where it is built, and how it comes back round */
+const chapters = [process[0], process[3], process[6]].map((p) => ({ word: p.name, body: p.body }));
 
 export default function KineticHome() {
   const root = useRef<HTMLDivElement>(null);
@@ -149,7 +145,7 @@ export default function KineticHome() {
         scrollTrigger: { trigger: railWrap, start: "top 80%" },
       });
 
-      /* --- ticker of the partners, paused by the Pause motion control --- */
+      /* --- ticker of the stack, paused by the Pause motion control --- */
       loops.current = [gsap.to(".v3-ticker__track", { xPercent: -50, duration: 24, ease: "none", repeat: -1 })];
 
       /* --- stat blocks pop up from their baseline --- */
@@ -184,24 +180,23 @@ export default function KineticHome() {
       {/* HERO */}
       <section className="v3-hero" aria-labelledby="v3-title">
         <h1 id="v3-title" className="v3-hero__title">
-          <span className="v3-hero__row">Software</span>
-          <span className="v3-hero__row">that</span>
-          <span className="v3-hero__row v3-hero__row--accent">moves</span>
+          <span className="v3-hero__kicker">{intro.title[0]}</span>
+          <span className="v3-hero__row">{intro.title[1]}</span>
+          <span className="v3-hero__row">{intro.title[2].split(" ")[0]}</span>
+          <span className="v3-hero__row v3-hero__row--accent">{intro.title[2].split(" ").slice(1).join(" ")}</span>
         </h1>
         <div className="v3-hero__foot">
-          <p className="v3-hero__sub">
-            Web, mobile, ERP and AI products from the software wing of Illumia Solutions. Designed, built,
-            secured and supported by one team in six countries.
-          </p>
+          <p className="v3-hero__sub">{intro.lede}</p>
           <div className="v3-hero__cta">
-            <TLink href="/v3/contact" className="v3-blob" data-magnetic label="Contact">Start a project</TLink>
+            <TLink href="/v3/contact" className="v3-blob" data-magnetic label="Contact">{pages.hero.primary}</TLink>
+            <TLink href="/v3/services" className="v3-pill" label="Services">{pages.hero.secondary}</TLink>
           </div>
         </div>
       </section>
 
       {/* CHAPTERS */}
       <section className="v3-chapters" aria-labelledby="v3-ch-title">
-        <h2 id="v3-ch-title" className="sr-only">How a project moves</h2>
+        <h2 id="v3-ch-title" className="sr-only">{pages.processHead.title}</h2>
         <div className="v3-chapters__stage">
           {chapters.map((c, i) => (
             <div key={c.word} className="v3-act" data-first={i === 0}>
@@ -216,34 +211,38 @@ export default function KineticHome() {
       {/* SERVICES STACK */}
       <section className="v3-services" aria-labelledby="v3-svc-title">
         <div className="v3-head">
-          <h2 id="v3-svc-title">What we build</h2>
-          <TLink href="/v3/services" className="v3-pill" label="Services">All six services</TLink>
+          <h2 id="v3-svc-title">{pages.servicesHead.title}</h2>
+          <TLink href="/v3/services" className="v3-pill" label="Services">All four services</TLink>
         </div>
         <div className="v3-stack">
           {services.map((s, i) => (
             <article key={s.slug} className={`v3-card v3-card--${i % 3}`}>
+              <p className="v3-card__tag">0{i + 1} · {s.tag}</p>
               <h3>{s.name}</h3>
+              <p className="v3-card__promise">{s.promise}</p>
               <p>{s.short}</p>
-              <ul role="list">{s.stack.map((t) => <li key={t}>{t}</li>)}</ul>
+              <ul role="list">{s.highlights.map((t) => <li key={t}>{t}</li>)}</ul>
+              <TLink href={`/v3/services/${s.slug}`} className="v3-pill" label={s.name}>Read more</TLink>
             </article>
           ))}
         </div>
       </section>
 
-      {/* WORK RAIL */}
+      {/* OWNERSHIP RAIL */}
       <section className="v3-work" aria-labelledby="v3-work-title">
         <div className="v3-head">
-          <h2 id="v3-work-title">Built lately</h2>
-          <TLink href="/v3/work" className="v3-pill" label="Work">Every project</TLink>
+          <h2 id="v3-work-title">{pages.ownershipHead.title}</h2>
+          <TLink href="/v3/process" className="v3-pill" label="Process">How we work</TLink>
         </div>
         <div className="v3-rail" data-cursor="Drag" data-lenis-prevent-touch>
           <div className="v3-rail__track">
-            {projects.map((p) => (
-              <article key={p.slug} className="v3-rail__card">
-                <div className="v3-rail__cover"><ProjectCover kind={p.cover} /></div>
-                <h3>{p.name}</h3>
-                <p>{p.outcome}</p>
-                <span>{p.sector}, concept</span>
+            {ownership.map((o) => (
+              <article key={o.name} className="v3-rail__card">
+                <div className="v3-rail__cover v3-rail__cover--file">
+                  <pre aria-hidden="true">{o.snippet.map((l) => <code key={l}>{l}</code>)}</pre>
+                </div>
+                <h3>{o.name}</h3>
+                <p>{o.body}</p>
               </article>
             ))}
           </div>
@@ -254,7 +253,7 @@ export default function KineticHome() {
       <section className="v3-stats" aria-labelledby="v3-stats-title">
         <h2 id="v3-stats-title" className="v3-stats__title">The short version</h2>
         <dl className="v3-stats__grid">
-          {company.stats.map((s, i) => (
+          {stats.map((s, i) => (
             <div key={s.label} className={`v3-stat v3-stat--${i}`}>
               <dd><span data-count={s.value}>{s.value}</span>{s.suffix}</dd>
               <dt>{s.label}</dt>
@@ -263,19 +262,35 @@ export default function KineticHome() {
         </dl>
       </section>
 
-      {/* PARTNERS TICKER */}
-      <section className="v3-ticker" aria-label="Technology partners">
-        <ul className="sr-only">{company.partners.map((p) => <li key={p}>{p}</li>)}</ul>
+      {/* AGILE */}
+      <section className="v3-agile" aria-labelledby="v3-agile-title">
+        <div className="v3-head">
+          <h2 id="v3-agile-title">{agile.title}</h2>
+        </div>
+        <p className="v3-agile__lede">{agile.body}</p>
+        <div className="v3-agile__grid">
+          {agile.points.map((x, i) => (
+            <article key={x.name} className={`v3-agile__card v3-card--${i % 3}`}>
+              <h3>{x.name}</h3>
+              <p>{x.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* STACK TICKER */}
+      <section className="v3-ticker" aria-label="Technologies we use">
+        <ul className="sr-only">{stack.map((p) => <li key={p}>{p}</li>)}</ul>
         <div className="v3-ticker__track" aria-hidden="true">
-          {[...company.partners, ...company.partners].map((p, i) => <span key={i}>{p}</span>)}
+          {[...stack, ...stack].map((p, i) => <span key={i}>{p}</span>)}
         </div>
       </section>
 
       {/* CTA */}
       <section className="v3-cta" aria-labelledby="v3-cta-title">
-        <h2 id="v3-cta-title" className="v3-cta__title">Got a build?</h2>
-        <p>Tell us what it should do. An engineer replies within one working day.</p>
-        <TLink href="/v3/contact" className="v3-blob v3-blob--big" data-magnetic label="Contact">Let&rsquo;s talk</TLink>
+        <h2 id="v3-cta-title" className="v3-cta__title">{pages.footer.ask}</h2>
+        <p>{intro.philosophy}</p>
+        <TLink href="/v3/contact" className="v3-blob v3-blob--big" data-magnetic label="Contact">{pages.footer.cta}</TLink>
       </section>
     </div>
   );

@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { TLink } from "@/components/motion/Transition";
 import { onPageEnter } from "@/components/motion/onEnter";
 import { gsap, SplitText, useGSAP, ease, reducedMotion } from "@/lib/gsap";
-import { services } from "@/lib/content";
+import { pages, promises, services } from "@/lib/copy";
 
 export default function EditorialServices() {
   const root = useRef<HTMLDivElement>(null);
@@ -45,7 +45,7 @@ export default function EditorialServices() {
     <div ref={root} className="v2-page v2-sub">
       <header className="v2-sub__head">
         <h1 className="v2-sub__title">The <em>index</em></h1>
-        <p className="v2-sub__lede">Six practices. Open any one to see what it covers and what we usually build it with.</p>
+        <p className="v2-sub__lede">{pages.servicesPage.lede}</p>
       </header>
 
       <div className="v2-acc">
@@ -60,16 +60,20 @@ export default function EditorialServices() {
                   aria-controls={`p-${s.slug}`}
                   onClick={() => setOpen(isOpen ? "" : s.slug)}
                 >
-                  <span>{s.name}</span>
+                  <span><small className="v2-acc__tag">{s.tag}</small>{s.name}</span>
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M12 4v16" /></svg>
                 </button>
               </h2>
               <div id={`p-${s.slug}`} className="v2-acc__panel" data-slug={s.slug} role="region" aria-label={s.name}>
                 <div className="v2-acc__inner">
-                  <p className="v2-acc__body">{s.body}</p>
+                  <div className="v2-acc__body">
+                    <p><em>{s.promise}</em></p>
+                    <p>{s.short}</p>
+                    <TLink href={`/v2/services/${s.slug}`} className="v2-ul" label={s.name}>Read the full chapter</TLink>
+                  </div>
                   <div>
-                    <h3>Deliverables</h3>
-                    <ul role="list">{s.deliverables.map((d) => <li key={d}>{d}</li>)}</ul>
+                    <h3>Core capabilities</h3>
+                    <ul role="list">{s.highlights.map((d) => <li key={d}>{d}</li>)}</ul>
                   </div>
                   <div>
                     <h3>Stack</h3>
@@ -83,9 +87,13 @@ export default function EditorialServices() {
       </div>
 
       <section className="v2-sub__close">
-        <h2>Not sure which one you need?</h2>
-        <p>Most projects start with a two-week discovery sprint. You leave with a brief, a prototype and a fixed quote.</p>
-        <TLink href="/v2/contact" className="v2-btn" label="Contact">Book a discovery sprint</TLink>
+        <h2>{pages.servicesPage.promisesTitle}</h2>
+        <dl className="v2-promises">
+          {promises.map((p) => (
+            <div key={p.name}><dt>{p.name}</dt><dd>{p.body}</dd></div>
+          ))}
+        </dl>
+        <TLink href="/v2/contact" className="v2-btn" label="Contact">{pages.hero.primary}</TLink>
       </section>
     </div>
   );

@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { TLink } from "@/components/motion/Transition";
 import { onPageEnter } from "@/components/motion/onEnter";
 import { gsap, SplitText, useGSAP, ease, reducedMotion } from "@/lib/gsap";
-import { services } from "@/lib/content";
+import { pages, promises, services } from "@/lib/copy";
 
 export default function BlueprintServices() {
   const root = useRef<HTMLDivElement>(null);
@@ -39,8 +39,8 @@ export default function BlueprintServices() {
   return (
     <div ref={root} className="v4-page v4-sub">
       <header className="v4-sub__head">
-        <h1 className="v4-sub__title">Six practices, <em>one</em> standard</h1>
-        <p className="v4-sub__lede">Every practice is held to the same rule: documented, tested, secured, and handed over so your team can run it.</p>
+        <h1 className="v4-sub__title">Four disciplines, <em>one</em> accountable team</h1>
+        <p className="v4-sub__lede">{pages.servicesPage.lede}</p>
       </header>
 
       {services.map((s, i) => (
@@ -50,18 +50,21 @@ export default function BlueprintServices() {
             <ul role="list">{s.stack.map((t) => <li key={t}>{t}</li>)}</ul>
           </div>
           <div className="v4-room__text">
-            <p className="v4-room__line"><em>Practice {i + 1} of {services.length}</em></p>
+            <p className="v4-room__line"><em>{s.tag} · {i + 1} of {services.length} · {s.promise}</em></p>
             <h2 id={`r-${s.slug}`}>{s.name}</h2>
-            <p>{s.body}</p>
-            <ul role="list" className="v4-room__list">{s.deliverables.map((d) => <li key={d}>{d}</li>)}</ul>
+            <p>{s.short}</p>
+            <ul role="list" className="v4-room__list">{s.highlights.map((d) => <li key={d}>{d}</li>)}</ul>
+            <TLink href={`/v4/services/${s.slug}`} className="v4-link" label={s.name}>Read more</TLink>
           </div>
         </section>
       ))}
 
       <section className="v4-sub__close">
-        <h2>Start with the foundation</h2>
-        <p>A two-week discovery sprint gives you a brief, a prototype and a fixed quote.</p>
-        <TLink href="/v4/contact" className="v4-btn" label="Contact">Plan your build</TLink>
+        <h2>{pages.servicesPage.promisesTitle}</h2>
+        <dl className="v4-promises">
+          {promises.map((p) => <div key={p.name}><dt><em>{p.name}</em></dt><dd>{p.body}</dd></div>)}
+        </dl>
+        <TLink href="/v4/contact" className="v4-btn" label="Contact">{pages.hero.primary}</TLink>
       </section>
     </div>
   );

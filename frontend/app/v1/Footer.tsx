@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { TLink } from "@/components/motion/Transition";
 import { Clock } from "@/components/motion/Clock";
 import { gsap, SplitText, useGSAP, ease, reducedMotion } from "@/lib/gsap";
-import { company } from "@/lib/content";
+import { company, pages, services } from "@/lib/copy";
 
 /* The sign-off: a giant line that a beam of light sweeps across. */
 export function Footer() {
@@ -25,6 +25,7 @@ export function Footer() {
 
   return (
     <footer ref={root} className="v1-foot">
+      <p className="v1-foot__ask">{pages.footer.ask}</p>
       <TLink href="/v1/contact" className="v1-foot__cta" label="Contact" data-cursor="view">
         <span className="v1-foot__big">Let&rsquo;s build</span>
         <span className="v1-foot__beam" aria-hidden="true" />
@@ -33,17 +34,21 @@ export function Footer() {
         <div>
           <img src="/brand/illumia-logo-light.svg" alt="Illumia Solutions" width={160} height={44} />
           <p className="v1-foot__tag">{company.tagline}</p>
+          <p className="v1-foot__about">{pages.footer.about}</p>
         </div>
-        <address>
-          {company.address.map((l) => <span key={l}>{l}</span>)}
-        </address>
+        <nav className="v1-foot__links" aria-label="Services">
+          {services.map((s) => <TLink key={s.slug} href={`/v1/services/${s.slug}`} label={s.name}>{s.name}</TLink>)}
+          <TLink href="/v1/process" label="Process">How we work</TLink>
+        </nav>
         <div className="v1-foot__links">
+          <a href={`mailto:${company.email}`}>{company.email}</a>
           <a href={company.phoneHref}>{company.phone}</a>
           <a href={company.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
           <p>Kolkata <Clock tz="Asia/Kolkata" /></p>
+          <address>{company.address.map((l) => <span key={l}>{l}</span>)}</address>
         </div>
       </div>
-      <p className="v1-foot__legal">© 2026 Illumia Solutions. Software Development.</p>
+      <p className="v1-foot__legal">{pages.footer.legal}</p>
     </footer>
   );
 }

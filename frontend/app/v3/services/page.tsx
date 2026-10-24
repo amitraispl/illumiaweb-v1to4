@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { TLink } from "@/components/motion/Transition";
 import { onPageEnter } from "@/components/motion/onEnter";
 import { gsap, SplitText, useGSAP, ease, reducedMotion } from "@/lib/gsap";
-import { services, process } from "@/lib/content";
+import { pages, process, promises, services } from "@/lib/copy";
 
 export default function KineticServices() {
   const root = useRef<HTMLDivElement>(null);
@@ -43,17 +43,22 @@ export default function KineticServices() {
   return (
     <div ref={root} className="v3-page v3-sub">
       <header className="v3-sub__head">
-        <h1 className="v3-sub__title">Services</h1>
-        <p className="v3-sub__lede">Six ways in. Every one ends the same way: software in production that your team can run.</p>
+        <h1 className="v3-sub__title">{pages.servicesPage.title}</h1>
+        <p className="v3-sub__lede">{pages.servicesPage.lede}</p>
       </header>
 
       <div className="v3-svcs">
         {services.map((s, i) => (
           <section key={s.slug} id={s.slug} className={`v3-svc v3-svc--${i % 3}`} aria-labelledby={`k-${s.slug}`}>
+            <p className="v3-card__tag">0{i + 1} · {s.tag}</p>
             <h2 id={`k-${s.slug}`} className="v3-svc__name">{s.name}</h2>
             <div className="v3-svc__grid">
-              <p className="v3-svc__body">{s.body}</p>
-              <ul role="list" className="v3-svc__list">{s.deliverables.map((d) => <li key={d}>{d}</li>)}</ul>
+              <div className="v3-svc__body">
+                <p className="v3-card__promise">{s.promise}</p>
+                <p>{s.short}</p>
+                <TLink href={`/v3/services/${s.slug}`} className="v3-pill v3-pill--solid" label={s.name}>Read more</TLink>
+              </div>
+              <ul role="list" className="v3-svc__list">{s.highlights.map((d) => <li key={d}>{d}</li>)}</ul>
               <ul role="list" className="v3-svc__tags">{s.stack.map((d) => <li key={d}>{d}</li>)}</ul>
             </div>
           </section>
@@ -61,17 +66,20 @@ export default function KineticServices() {
       </div>
 
       <section className="v3-process" aria-labelledby="k-process">
-        <h2 id="k-process">From hello to live</h2>
-        <ol className="v3-steps">
-          {process.map((p) => (
+        <h2 id="k-process">{pages.servicesPage.promisesTitle}</h2>
+        <ol className="v3-steps v3-steps--three">
+          {promises.map((p) => (
             <li key={p.name}>
               <h3>{p.name}</h3>
               <p>{p.body}</p>
-              <span>{p.weeks}</span>
             </li>
           ))}
         </ol>
-        <TLink href="/v3/contact" className="v3-blob" label="Contact">Start with discovery</TLink>
+        <p className="v3-sub__note">
+          All four run on the same {process.length}-stage cycle, from {process[0].name.toLowerCase()} to{" "}
+          {process[process.length - 1].name.toLowerCase()}, and back again.
+        </p>
+        <TLink href="/v3/process" className="v3-blob" label="Process">See how we work</TLink>
       </section>
     </div>
   );
