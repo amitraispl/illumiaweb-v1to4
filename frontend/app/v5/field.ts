@@ -45,7 +45,7 @@ export const state = {
   shock: { x: 0, y: 0, t: 9 },
   paused: false,
   /** light theme: particles are drawn as ink on paper instead of glow on the dark */
-  light: false,
+  light: true,
   shape: "nebula" as Shape,
   /** while the first-visit sequence runs, page requests are queued, not applied */
   held: false,

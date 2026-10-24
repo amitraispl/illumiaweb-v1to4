@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { chromes, themeScript } from "@/components/theme/script";
 import { Shell } from "./Shell";
 import "./v4.css";
 
@@ -13,6 +14,8 @@ export const metadata: Metadata = {
 export default function V4Layout({ children }: LayoutProps<"/v4">) {
   return (
     <div className={`v4 ${display.variable} ${text.variable}`}>
+      {/* before paint: put the saved theme (light by default) on <html> */}
+      <script dangerouslySetInnerHTML={{ __html: themeScript("v4", chromes.v4) }} />
       <Shell>{children}</Shell>
     </div>
   );

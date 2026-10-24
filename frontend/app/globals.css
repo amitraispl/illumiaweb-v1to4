@@ -89,6 +89,20 @@ button {
   border: 0;
 }
 
+/* Theme switch (components/theme): the new theme spreads out of the button in a circle */
+html.theme-vt::view-transition-old(root),
+html.theme-vt::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+html.theme-vt::view-transition-new(root) { z-index: 9999; }
+
+/* the switch's glyph shows where it takes you, like its label: a crescent while light, a sun while dark */
+[data-theme-now] > i {
+  flex: none; display: block; width: 14px; height: 14px; border-radius: 50%;
+  box-shadow: inset 5px -3px 0 0 currentColor, 0 0 0 0 transparent; transform: rotate(-30deg);
+  transition: box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-theme-now="dark"] > i { box-shadow: inset 0 0 0 7px currentColor, 0 0 0 3px rgb(180 31 60 / 0.3); transform: none; }
+[data-theme-now]:hover > i { transform: rotate(90deg); }
+
 /* Lenis */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }

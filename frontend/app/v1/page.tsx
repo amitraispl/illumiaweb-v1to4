@@ -77,13 +77,12 @@ export default function BeaconHome() {
         });
       });
 
-      /* --- dark → light: the page switches on its lights for the process, and off again for proof.
-         A timed flip, not a scrub, so the page never sits in a muddy half-grey. --- */
-      const DARK = { "--v1-bg": "#1f1f25", "--v1-fg": "#ffffff", "--v1-dim": "#c9c9cf", "--v1-acc": "#e66a82", "--v1-card": "#26262d" };
-      const LIGHT = { "--v1-bg": "#f4f5f7", "--v1-fg": "#26262b", "--v1-dim": "#55555c", "--v1-acc": "#b41f3c", "--v1-card": "#e9e9ee" };
-      const tone = (v: typeof DARK) => gsap.to(el, { ...v, duration: 0.9, ease: "power2.inOut", overwrite: true });
-      ScrollTrigger.create({ trigger: ".v1-process", start: "top 55%", onEnter: () => tone(LIGHT), onLeaveBack: () => tone(DARK) });
-      ScrollTrigger.create({ trigger: ".v1-proof", start: "top 55%", onEnter: () => tone(DARK), onLeaveBack: () => tone(LIGHT) });
+      /* --- the page flips to the other theme for the process, and back again for proof.
+         A timed flip, not a scrub, so the page never sits in a muddy half-grey. The palettes
+         and the 0.9s fade live in v1.css (.is-flipped), so the flip follows the theme switch. --- */
+      const flip = (on: boolean) => () => el.classList.toggle("is-flipped", on);
+      ScrollTrigger.create({ trigger: ".v1-process", start: "top 55%", onEnter: flip(true), onLeaveBack: flip(false) });
+      ScrollTrigger.create({ trigger: ".v1-proof", start: "top 55%", onEnter: flip(false), onLeaveBack: flip(true) });
 
       /* the path to success draws as you read it */
       gsap.fromTo(".v1-process__path", { drawSVG: "0%" }, {

@@ -465,3 +465,21 @@ html[data-v6-theme="light"] .v6-toast { color: #fff; }
 html[data-v6-theme="light"] .v6-drop__word { color: var(--v6-dim); }
 html[data-v6-theme="light"] .v6 [data-ui] { --fg: #26262b; --bg: #fff; --panel: #f4f5f7; --line: #e2e2e7; --muted: #6e6e75; }
 .v6-strip__body[hidden] { display: none; }
+
+/* ---------- phones: legibility pass ----------
+   The display face is very wide, so on a phone the hero sizes to its longest word and never breaks
+   one mid-letter; the fixed nav gets a frosted band so copy does not scroll up under the logo. */
+@media (max-width: 899px) {
+  .v6-nav {
+    padding-block: 12px;
+    background: color-mix(in srgb, var(--v6-bg) 88%, transparent);
+    backdrop-filter: blur(14px) saturate(1.3);
+    box-shadow: 0 1px 0 var(--v6-line);
+  }
+  .v6-nav__sound, .v6-nav__motion, .v6-nav__menu, .v6-nav__theme { min-height: 44px; }
+  .v6-nav__sound, .v6-nav__theme { min-width: 44px; justify-content: center; }
+}
+@media (max-width: 760px) {
+  .v6-hero__title { font-size: min(8.4vw, 2.6rem); letter-spacing: -0.04em; }
+  .v6 h2 { overflow-wrap: break-word; hyphens: auto; }
+}

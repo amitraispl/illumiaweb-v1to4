@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Instrument_Sans } from "next/font/google";
+import { chromes, themeScript } from "@/components/theme/script";
 import { Shell } from "./Shell";
 import "./v2.css";
 
@@ -13,6 +14,8 @@ export const metadata: Metadata = {
 export default function V2Layout({ children }: LayoutProps<"/v2">) {
   return (
     <div className={`v2 ${display.variable} ${text.variable}`}>
+      {/* before paint: put the saved theme (light by default) on <html> */}
+      <script dangerouslySetInnerHTML={{ __html: themeScript("v2", chromes.v2) }} />
       <Shell>{children}</Shell>
     </div>
   );

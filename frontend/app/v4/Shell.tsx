@@ -6,6 +6,7 @@ import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { clearEnter, signalEnter } from "@/components/motion/onEnter";
 import { TLink, TransitionProvider, type TransitionHooks } from "@/components/motion/Transition";
 import { gsap, ScrollTrigger, useGSAP, ease, reducedMotion } from "@/lib/gsap";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { company, navFor, pages, services } from "@/lib/copy";
 
 const nav = navFor("v4");
@@ -89,9 +90,13 @@ export function Shell({ children }: { children: ReactNode }) {
               <span>{menu ? "Close" : "Menu"}</span>
             </button>
             <TLink href="/v4" label="Illumia" className="v4-nav__logo">
-              <img src="/brand/illumia-logo-light.svg" alt="Illumia Solutions, home" width={150} height={40} />
+              <img className="v4-logo v4-logo--on-dark" src="/brand/illumia-logo-light.svg" alt="Illumia Solutions, home" width={150} height={40} />
+              <img className="v4-logo v4-logo--on-light" src="/brand/illumia-logo-dark.svg" alt="Illumia Solutions, home" width={150} height={40} />
             </TLink>
-            <TLink href="/v4/contact" className="v4-btn v4-btn--ghost" label="Contact">Enquire</TLink>
+            <div className="v4-nav__end">
+              <ThemeToggle version="v4" className="v4-nav__theme" />
+              <TLink href="/v4/contact" className="v4-btn v4-btn--ghost" label="Contact">Enquire</TLink>
+            </div>
           </header>
 
           <div className="v4-progress" aria-hidden="true">

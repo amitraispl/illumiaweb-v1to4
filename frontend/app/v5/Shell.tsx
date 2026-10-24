@@ -12,6 +12,7 @@ import { company, services } from "./content";
 import { LightField } from "./LightField";
 import { Footer } from "./Footer";
 import { Palette } from "./Palette";
+import { chromes } from "@/components/theme/script";
 import { hold, morph, scatter, shock, state } from "./field";
 
 const nav = [
@@ -26,6 +27,7 @@ export type Theme = "dark" | "light";
 /** Set the theme on <html>, where the pre-paint script in the layout also puts it. */
 export function applyTheme(t: Theme) {
   document.documentElement.dataset.v5Theme = t;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", chromes.v5[t]);
   state.light = t === "light";
   try {
     localStorage.setItem("v5-theme", t);
@@ -42,7 +44,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const [paused, setPaused] = useState(false);
   const [mod, setMod] = useState("Ctrl");
   const [grid, setGrid] = useState({ cols: 14, rows: 9 });
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
   const lastDown = useRef({ x: 0, y: 0 });
 
   /* the mosaic is sized to the screen so its tiles stay square */
@@ -55,7 +57,7 @@ export function Shell({ children }: { children: ReactNode }) {
     const id = requestAnimationFrame(() => {
       size();
       if (/Mac|iPhone|iPad/.test(navigator.platform)) setMod("⌘");
-      const t: Theme = document.documentElement.dataset.v5Theme === "light" ? "light" : "dark";
+      const t: Theme = document.documentElement.dataset.v5Theme === "dark" ? "dark" : "light";
       state.light = t === "light";
       setTheme(t);
       try {

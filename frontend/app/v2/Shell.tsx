@@ -7,6 +7,7 @@ import { clearEnter, signalEnter } from "@/components/motion/onEnter";
 import { TLink, TransitionProvider, type TransitionHooks } from "@/components/motion/Transition";
 import { Clock } from "@/components/motion/Clock";
 import { gsap, SplitText, useGSAP, ease, finePointer, reducedMotion } from "@/lib/gsap";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { company, navFor, pages, services } from "@/lib/copy";
 
 /* the masthead is the way home, so the nav lists the other three */
@@ -95,7 +96,8 @@ export function Shell({ children }: { children: ReactNode }) {
           <a className="v2-skip" href="#main">Skip to content</a>
           <header className="v2-nav">
             <TLink href="/v2" className="v2-nav__logo" label="Illumia">
-              <img src="/brand/illumia-logo-dark.svg" alt="Illumia Solutions, home" width={140} height={38} />
+              <img className="v2-logo v2-logo--on-light" src="/brand/illumia-logo-dark.svg" alt="Illumia Solutions, home" width={140} height={38} />
+              <img className="v2-logo v2-logo--on-dark" src="/brand/illumia-logo-light.svg" alt="Illumia Solutions, home" width={140} height={38} />
             </TLink>
             <nav aria-label="Main" className="v2-nav__links">
               {nav.map((n) => (
@@ -104,7 +106,10 @@ export function Shell({ children }: { children: ReactNode }) {
                 </TLink>
               ))}
             </nav>
-            <p className="v2-nav__time">Kolkata <Clock tz="Asia/Kolkata" /></p>
+            <div className="v2-nav__end">
+              <p className="v2-nav__time">Kolkata <Clock tz="Asia/Kolkata" /></p>
+              <ThemeToggle version="v2" className="v2-nav__theme" />
+            </div>
           </header>
 
           <main id="main">{children}</main>

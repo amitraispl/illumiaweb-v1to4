@@ -30,7 +30,7 @@ export const flux = {
   paused: false,
   overdrive: false,
   /** light theme: the display prints ink on paper instead of glowing on charcoal */
-  light: false,
+  light: true,
   /** ink floods from a point while set (page transitions) */
   flood: null as null | { x: number; y: number; t: number },
   /** dye clears fast until this time (ms, performance.now) */

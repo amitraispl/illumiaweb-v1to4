@@ -31,8 +31,8 @@ export default function EditorialProcess() {
         scrollTrigger: { trigger: ".v2-agile", start: "top 75%" },
       });
       const words = SplitText.create(".v2-ink", { type: "words" });
-      gsap.fromTo(words.words, { color: "#9a9aa2" }, {
-        color: "#26262b", stagger: 0.1, ease: "none",
+      gsap.fromTo(words.words, { opacity: 0.35 }, {
+        opacity: 1, stagger: 0.1, ease: "none",
         scrollTrigger: { trigger: ".v2-ink", start: "top 80%", end: "bottom 50%", scrub: true },
       });
       return off;

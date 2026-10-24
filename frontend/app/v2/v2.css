@@ -1,6 +1,7 @@
 /* ============ V2 · EDITORIAL ============
    A printed issue: paper ground, ink type, one crimson mark. Huge serif display, quiet grotesk text.
-   Instrument Serif (display) · Instrument Sans (text) */
+   Instrument Serif (display) · Instrument Sans (text)
+   Two themes on <html data-v2-theme>: the paper issue (light, the default) and a night edition. */
 
 .v2 {
   --paper: #f4f5f7;
@@ -8,6 +9,10 @@
   --ink: #1f1f25;
   --ink-2: #4a4a52;
   --mark: #b41f3c;
+  --mark-bg: #b41f3c;
+  --rule: rgb(31 31 37 / 0.15);
+  --sheet: #ffffff;
+  --foot-bg: var(--ink);
   --out: cubic-bezier(0.16, 1, 0.3, 1);
   --g: var(--gutter);
   --font-ui: var(--f-text);
@@ -26,7 +31,7 @@
 .v2 .ch-mask { padding: 0.08em 0.03em 0.14em; margin: -0.08em -0.03em -0.14em; }
 .v2 [data-ui] { --bg: #ffffff; --panel: #f1f1f4; }
 
-.v2-skip { position: fixed; left: var(--g); top: -100px; z-index: 100; padding: 10px 16px; background: var(--ink); color: #fff; }
+.v2-skip { position: fixed; left: var(--g); top: -100px; z-index: 100; padding: 10px 16px; background: var(--ink); color: var(--paper); }
 .v2-skip:focus { top: 12px; }
 
 /* ---------- nav ---------- */
@@ -39,7 +44,13 @@
 .v2-nav__logo img { width: 140px; height: auto; }
 .v2-nav__links { display: flex; gap: 32px; font-weight: 500; }
 .v2-nav__links a[aria-current="page"] { color: var(--mark); }
-.v2-nav__time { justify-self: end; font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.v2-nav__time { font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.v2-nav__end { justify-self: end; display: flex; align-items: center; gap: 20px; }
+.v2-nav__theme {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px;
+  border: 1px solid currentColor; border-radius: 99px; font-weight: 500; transition: color 0.3s;
+}
+.v2-nav__theme:hover { color: var(--mark); }
 
 /* rolling link: the word rolls up to a copy of itself */
 .v2-roll { position: relative; display: inline-block; overflow: hidden; vertical-align: top; }
@@ -65,10 +76,11 @@ a:hover .v2-roll > span, a:hover .v2-roll::after { transform: translateY(-100%);
   transition: color 0.5s var(--out);
 }
 .v2-btn::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--mark);
+  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--mark-bg);
   transform: translateY(101%); transition: transform 0.6s var(--out);
 }
 .v2-btn:hover::before { transform: translateY(0); }
+.v2-btn:hover { color: #fff; }
 .v2-btn:active { transform: translateY(1px); }
 
 /* ---------- cursor ---------- */
@@ -79,14 +91,15 @@ a:hover .v2-roll > span, a:hover .v2-roll::after { transform: translateY(-100%);
 }
 .v2-cursor span { font: italic 400 18px/1 var(--f-display); color: var(--paper); opacity: 0; transition: opacity 0.3s; }
 .v2-cursor[data-state="link"] { width: 44px; height: 44px; background: transparent; box-shadow: inset 0 0 0 1.5px var(--ink); }
-.v2-cursor[data-state="word"] { width: 96px; height: 96px; background: var(--mark); }
+.v2-cursor[data-state="word"] { width: 96px; height: 96px; background: var(--mark-bg); }
+.v2-cursor[data-state="word"] span { color: #fff; }
 .v2-cursor[data-state="word"] span { opacity: 1; }
 @media (pointer: fine) { .v2 a, .v2 button { cursor: none; } }
 
 /* ---------- shutter transition ---------- */
 .v2-shutter { position: fixed; inset: 0; z-index: 80; visibility: hidden; pointer-events: none; }
 .v2-shutter__panel { position: absolute; inset: 0; background: var(--ink); transform: translateY(100%); }
-.v2-shutter__panel + .v2-shutter__panel { background: var(--mark); display: grid; place-items: center; }
+.v2-shutter__panel + .v2-shutter__panel { background: var(--mark-bg); display: grid; place-items: center; }
 .v2-shutter__mask { overflow: hidden; }
 .v2-shutter__word { display: block; font: italic 400 clamp(3rem, 9vw, 8rem) / 1.1 var(--f-display); color: #fff; }
 
@@ -189,10 +202,10 @@ a:hover .v2-roll > span, a:hover .v2-roll::after { transform: translateY(-100%);
 .v2-sheet {
   position: sticky; top: 90px; min-height: 64vh; transform-origin: top center;
   display: grid; align-content: space-between; gap: 32px; padding: clamp(28px, 4vw, 56px);
-  background: #fff; border-radius: 4px; box-shadow: 0 -20px 40px -30px rgb(31 31 37 / 0.35);
+  background: var(--sheet); border-radius: 4px; box-shadow: 0 -20px 40px -30px rgb(31 31 37 / 0.35);
 }
 .v2-sheet:nth-child(even) { background: var(--paper-2); }
-.v2-sheet:last-child { background: var(--mark); color: #fff; }
+.v2-sheet:last-child { background: var(--mark-bg); color: #fff; }
 .v2-sheet h3 { font-size: clamp(3.6rem, 10vw, 9rem) !important; line-height: 0.9 !important; }
 .v2-sheet p { max-width: 30ch; font-size: clamp(1.2rem, 1.8vw, 1.6rem); }
 .v2-sheet span { font-weight: 600; }
@@ -202,7 +215,7 @@ a:hover .v2-roll > span, a:hover .v2-roll::after { transform: translateY(-100%);
 }
 
 /* ---------- footer ---------- */
-.v2-foot { background: var(--ink); color: var(--paper); padding: 96px var(--g) 28px; overflow: hidden; }
+.v2-foot { background: var(--foot-bg); color: #f4f5f7; padding: 96px var(--g) 28px; overflow: hidden; }
 .v2-foot__top { display: grid; gap: 40px; }
 .v2-foot__lead { max-width: 22ch; font: 400 clamp(2rem, 3.6vw, 3.4rem)/1.1 var(--f-display); }
 .v2-foot__links { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
@@ -319,8 +332,8 @@ a:hover .v2-roll > span, a:hover .v2-roll::after { transform: translateY(-100%);
 .v2-agile .v2-services__head { margin-bottom: 0; }
 .v2-agile .v2-services__head h2 { max-width: 18ch; font-size: clamp(2.6rem, 5vw, 5rem); }
 .v2-agile__lede { max-width: 52ch; font-size: 1.2rem; color: var(--ink-2); }
-.v2-agile__list, .v2-own { list-style: none; margin: 0 0 40px; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--rule, rgb(31 31 37 / 0.15)); }
-.v2-agile__list li, .v2-own li { display: grid; gap: 6px 28px; padding: 28px 0; border-bottom: 1px solid var(--rule, rgb(31 31 37 / 0.15)); }
+.v2-agile__list, .v2-own { list-style: none; margin: 0 0 40px; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--rule); }
+.v2-agile__list li, .v2-own li { display: grid; gap: 6px 28px; padding: 28px 0; border-bottom: 1px solid var(--rule); }
 .v2-agile__list small, .v2-own small { font-style: italic; font-family: var(--f-display); font-size: 1.3rem; color: var(--mark); }
 .v2-agile__list h3, .v2-own h3 { font-size: clamp(1.8rem, 3vw, 2.8rem); }
 .v2-agile__list p, .v2-own p { max-width: 52ch; color: var(--ink-2); }
@@ -331,7 +344,7 @@ a:hover .v2-roll > span, a:hover .v2-roll::after { transform: translateY(-100%);
 .v2-acc__body { display: grid; gap: 14px; align-content: start; }
 .v2-acc__body em { font-family: var(--f-display); font-size: 1.4em; }
 .v2-promises { display: grid; gap: 22px; margin: 0; max-width: 980px; }
-.v2-promises div { display: grid; gap: 4px 28px; padding-top: 18px; border-top: 1px solid var(--rule, rgb(31 31 37 / 0.15)); }
+.v2-promises div { display: grid; gap: 4px 28px; padding-top: 18px; border-top: 1px solid var(--rule); }
 .v2-promises dt { font: italic 400 1.8rem/1.1 var(--f-display); }
 .v2-promises dd { margin: 0; max-width: 52ch; color: var(--ink-2); }
 @media (min-width: 900px) { .v2-promises div { grid-template-columns: 1fr 2fr; } }
@@ -358,3 +371,49 @@ a:hover .v2-roll > span, a:hover .v2-roll::after { transform: translateY(-100%);
 .v2-chap__next b { font: 400 clamp(3rem, 8vw, 8rem)/0.9 var(--f-display); letter-spacing: -0.03em; transition: color 0.4s; }
 .v2-chap__next a:hover b { color: var(--mark); }
 .v2-chap__next em { font-family: var(--f-display); font-size: 1.6rem; color: var(--ink-2); }
+
+/* ---------- themes ----------
+   The night edition: warm-black stock, off-white ink. Crimson fills stay brand crimson;
+   crimson as type lifts to the on-dark pink so it keeps its contrast. */
+.v2-logo--on-dark { display: none; }
+html[data-v2-theme="dark"] .v2-logo--on-light { display: none; }
+html[data-v2-theme="dark"] .v2-logo--on-dark { display: block; }
+html[data-v2-theme="light"] body:has(.v2) { background: #f4f5f7; }
+html[data-v2-theme="dark"] body:has(.v2) { background: #16161b; }
+html[data-v2-theme="dark"] .v2 {
+  --paper: #16161b;
+  --paper-2: #24242b;
+  --ink: #ececf0;
+  --ink-2: #a9a9b2;
+  --mark: #e66a82;
+  --mark-bg: #b41f3c;
+  --rule: rgb(255 255 255 / 0.14);
+  --sheet: #1e1e24;
+  --foot-bg: #0e0e12;
+}
+html[data-v2-theme="dark"] .v2 [data-ui] { --fg: #ececf0; --bg: #1d1d23; --panel: #26262d; --line: rgb(255 255 255 / 0.1); --muted: #9a9aa3; }
+html[data-v2-theme="dark"] .v2-letter__text input::placeholder { color: #6e6e75; }
+html[data-v2-theme="dark"] .v2-preview { box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.7); }
+
+/* ---------- phones ----------
+   No hamburger in this issue: on a narrow page the masthead and the switch share the top row,
+   and the three links get their own row with full-height tap targets. */
+@media (max-width: 560px) {
+  .v2-nav { grid-template-columns: 1fr auto; grid-template-areas: "logo end" "links links"; gap: 6px 12px; padding-block: 12px 4px; }
+  .v2-nav__logo { grid-area: logo; }
+  .v2-nav__end { grid-area: end; }
+  .v2-nav__links { grid-area: links; justify-self: stretch; justify-content: space-between; }
+  .v2-nav__links a { display: inline-flex; align-items: center; min-height: 44px; }
+  .v2-nav__theme { width: 44px; min-height: 44px; padding: 0; justify-content: center; }
+  .v2-nav__theme span { display: none; }
+  .v2-hero, .v2-sub { padding-top: 150px; }
+  .v2-foot__links a { display: inline-block; padding-block: 8px; }
+  .v2-letter__text { font-size: clamp(1.6rem, 7vw, 2rem); }
+  .v2-sheet { min-height: 56vh; }
+}
+@media (min-width: 561px) and (max-width: 760px) {
+  .v2-nav { grid-template-columns: auto 1fr auto; }
+  .v2-nav__theme span { display: none; }
+  .v2-nav__theme { width: 44px; padding: 0; justify-content: center; }
+  .v2-nav__links a { display: inline-flex; align-items: center; min-height: 44px; }
+}

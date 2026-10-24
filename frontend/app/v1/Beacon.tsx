@@ -2,11 +2,13 @@
 
 import { useEffect, useRef } from "react";
 import { reducedMotion } from "@/lib/gsap";
+import { readTheme, THEME_EVENT } from "@/components/theme/theme";
 
 /*
  * The beacon: a WebGL field of charcoal lit by a crimson glow that trails the
- * pointer with inertia, with slow light rays and film grain. Falls back to the
- * CSS radial glow underneath when WebGL is unavailable.
+ * pointer with inertia, with slow light rays and film grain. On the light theme
+ * the same light is laid on paper as a crimson wash. Falls back to the CSS
+ * radial glow underneath when WebGL is unavailable.
  */
 const FRAG = `
 precision highp float;
@@ -14,6 +16,7 @@ uniform vec2 u_res;
 uniform vec2 u_mouse;
 uniform float u_time;
 uniform float u_intensity;
+uniform float u_light;
 
 float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
 float noise(vec2 p){
@@ -42,7 +45,13 @@ void main(){
   vec3 col = base + crimson * (glow + rays) + hot * core;
   // vignette and grain
   col *= 1.0 - 0.45 * length(uv - 0.5);
-  col += (hash(gl_FragCoord.xy + u_time) - 0.5) * 0.035;
+  // paper: the light tints the page toward crimson instead of adding to the dark
+  vec3 paper = vec3(0.957, 0.961, 0.969);         // #F4F5F7
+  vec3 ink = mix(paper, hot, clamp((glow + rays) * 0.7, 0.0, 1.0));
+  ink = mix(ink, crimson, clamp(core * 1.2, 0.0, 1.0));
+  ink *= 1.0 - 0.06 * length(uv - 0.5);
+  col = mix(col, ink, u_light);
+  col += (hash(gl_FragCoord.xy + u_time) - 0.5) * mix(0.035, 0.02, u_light);
   gl_FragColor = vec4(col, 1.0);
 }`;
 
@@ -79,6 +88,8 @@ export function Beacon({ className }: { className?: string }) {
     const uMouse = gl.getUniformLocation(prog, "u_mouse");
     const uTime = gl.getUniformLocation(prog, "u_time");
     const uInt = gl.getUniformLocation(prog, "u_intensity");
+    const uLight = gl.getUniformLocation(prog, "u_light");
+    let light = readTheme("v1") === "light" ? 1 : 0;
 
     const dpr = Math.min(window.devicePixelRatio, 1.5);
     let w = 0;
@@ -123,15 +134,25 @@ export function Beacon({ className }: { className?: string }) {
       gl.uniform2f(uMouse, pos.x * dpr, (h - pos.y) * dpr);
       gl.uniform1f(uTime, still ? 0 : t);
       gl.uniform1f(uInt, still ? 1 : intensity);
+      gl.uniform1f(uLight, light);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       if (still) cancelAnimationFrame(raf);
     };
     raf = requestAnimationFrame(frame);
     canvas.dataset.ready = "1";
 
+    // a theme switch repaints, even when the light is held still
+    const onTheme = () => {
+      light = readTheme("v1") === "light" ? 1 : 0;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(frame);
+    };
+    window.addEventListener(THEME_EVENT, onTheme);
+
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener(THEME_EVENT, onTheme);
       ro.disconnect();
       io.disconnect();
     };

@@ -13,6 +13,7 @@ import { Fluid } from "./Fluid";
 import { Footer } from "./Footer";
 import { burst, drain, floodFrom, flux } from "./flux";
 import { liquid } from "./Liquid";
+import { chromes } from "@/components/theme/script";
 import { blip, intensity, setSound, whoosh } from "./sound";
 
 const nav = navFor("v6");
@@ -22,6 +23,7 @@ export type Theme = "dark" | "light";
 /** Put the theme on <html> (the layout's pre-paint script does the same) and tell the ink. */
 function applyTheme(t: Theme) {
   document.documentElement.dataset.v6Theme = t;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", chromes.v6[t]);
   flux.light = t === "light";
   try {
     localStorage.setItem("v6-theme", t);
@@ -37,13 +39,13 @@ export function Shell({ children }: { children: ReactNode }) {
   const [sound, setSoundOn] = useState(false);
   const [paused, setPaused] = useState(false);
   const [toast, setToast] = useState("");
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
   const lastDown = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
       lastDown.current = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-      const t: Theme = document.documentElement.dataset.v6Theme === "light" ? "light" : "dark";
+      const t: Theme = document.documentElement.dataset.v6Theme === "dark" ? "dark" : "light";
       flux.light = t === "light";
       setTheme(t);
       try {

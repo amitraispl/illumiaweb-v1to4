@@ -8,6 +8,7 @@ import { Clock } from "@/components/motion/Clock";
 import { gsap, useGSAP, ease, finePointer } from "@/lib/gsap";
 import { company, navFor } from "@/lib/copy";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Footer } from "./Footer";
 
 const nav = navFor("v1");
@@ -114,7 +115,8 @@ export function Shell({ children }: { children: ReactNode }) {
           <a className="v1-skip" href="#main">Skip to content</a>
           <header className="v1-nav">
             <TLink href="/v1" className="v1-nav__logo" aria-label="Illumia Solutions, home">
-              <img src="/brand/illumia-logo-light.svg" alt="Illumia Solutions" width={148} height={40} />
+              <img className="v1-logo v1-logo--on-dark" src="/brand/illumia-logo-light.svg" alt="Illumia Solutions" width={148} height={40} />
+              <img className="v1-logo v1-logo--on-light" src="/brand/illumia-logo-dark.svg" alt="Illumia Solutions" width={148} height={40} />
             </TLink>
             <nav aria-label="Main" className="v1-nav__links">
               {nav.slice(1).map((n) => (
@@ -123,10 +125,13 @@ export function Shell({ children }: { children: ReactNode }) {
                 </TLink>
               ))}
             </nav>
-            <button className="v1-nav__menu" onClick={() => setMenu((m) => !m)} aria-expanded={menu} aria-controls="v1-menu">
-              <span>{menu ? "Close" : "Menu"}</span>
-              <i aria-hidden="true" />
-            </button>
+            <div className="v1-nav__tools">
+              <ThemeToggle version="v1" className="v1-nav__theme" />
+              <button className="v1-nav__menu" onClick={() => setMenu((m) => !m)} aria-expanded={menu} aria-controls="v1-menu">
+                <span>{menu ? "Close" : "Menu"}</span>
+                <i aria-hidden="true" />
+              </button>
+            </div>
           </header>
 
           <div id="v1-menu" className="v1-menu" role="dialog" aria-modal="true" aria-label="Menu" hidden={!menu}>

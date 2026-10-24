@@ -27,9 +27,12 @@ export default function KineticHome() {
       const offMag = magnetic(el, "[data-magnetic]", 0.5);
       if (reducedMotion()) return offMag;
 
-      /* --- hero: each letter stretches from condensed to wide, row by row --- */
+      /* on a phone the widest cut no longer fits a word to the screen, so letters stretch to 100 */
+      const WIDE = window.matchMedia("(max-width: 760px)").matches ? 100 : 125;
+
+      /* --- hero: each letter stretches from condensed to wide, row by row (words keep their letters together) --- */
       const rows = gsap.utils.toArray<HTMLElement>(".v3-hero__row");
-      const splits = rows.map((r) => SplitText.create(r, { type: "chars", charsClass: "k" }));
+      const splits = rows.map((r) => SplitText.create(r, { type: "words,chars", charsClass: "k" }));
       const chars = splits.flatMap((s) => s.chars as HTMLElement[]);
       gsap.set(chars, { "--w": 62, "--wg": 300, yPercent: 100, autoAlpha: 0 });
       gsap.set([".v3-hero__sub", ".v3-hero__cta"], { autoAlpha: 0, y: 30 });
@@ -37,7 +40,7 @@ export default function KineticHome() {
         gsap
           .timeline()
           .to(chars, { yPercent: 0, autoAlpha: 1, duration: 0.8, stagger: 0.025, ease: ease.out })
-          .to(chars, { "--w": 125, "--wg": 900, duration: 1.1, stagger: 0.025, ease: "power3.inOut" }, 0.15)
+          .to(chars, { "--w": WIDE, "--wg": 900, duration: 1.1, stagger: 0.025, ease: "power3.inOut" }, 0.15)
           .to([".v3-hero__sub", ".v3-hero__cta"], { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.08, ease: ease.out }, 0.6),
       );
 
@@ -92,7 +95,7 @@ export default function KineticHome() {
             .to(acts[i - 1].querySelector(".v3-act__word"), { yPercent: -100, "--w": 62, duration: 1, ease: "power2.in" })
             .to(acts[i - 1].querySelector(".v3-act__body"), { autoAlpha: 0, y: -30, duration: 0.6 }, "<")
             .to(".v3-chapters", { backgroundColor: fields[i], color: inks[i], duration: 1 }, "<")
-            .fromTo(a.querySelector(".v3-act__word"), { yPercent: 100, "--w": 62 }, { yPercent: 0, "--w": 125, duration: 1, ease: "power2.out" }, "-=0.3")
+            .fromTo(a.querySelector(".v3-act__word"), { yPercent: 100, "--w": 62 }, { yPercent: 0, "--w": WIDE, duration: 1, ease: "power2.out" }, "-=0.3")
             .fromTo(a.querySelector(".v3-act__body"), { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.6 }, "<0.3");
         }
         stage.to(".v3-chapters__bar i", { scaleX: (i + 1) / acts.length, duration: 0.5 }, "<");
@@ -157,7 +160,7 @@ export default function KineticHome() {
       /* --- final call: the words squeeze in as they arrive --- */
       const cta = SplitText.create(".v3-cta__title", { type: "words,chars", charsClass: "k" });
       gsap.fromTo(cta.chars, { "--w": 62, autoAlpha: 0 }, {
-        "--w": 125, autoAlpha: 1, stagger: 0.03, duration: 1, ease: ease.out,
+        "--w": WIDE, autoAlpha: 1, stagger: 0.03, duration: 1, ease: ease.out,
         scrollTrigger: { trigger: ".v3-cta", start: "top 70%" },
       });
 

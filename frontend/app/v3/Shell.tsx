@@ -6,6 +6,7 @@ import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { clearEnter, signalEnter } from "@/components/motion/onEnter";
 import { TLink, TransitionProvider, type TransitionHooks } from "@/components/motion/Transition";
 import { gsap, useGSAP, ease, finePointer, reducedMotion } from "@/lib/gsap";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { company, navFor, pages, services } from "@/lib/copy";
 
 const nav = navFor("v3");
@@ -117,11 +118,14 @@ export function Shell({ children }: { children: ReactNode }) {
             <a className="v3-skip" href="#main">Skip to content</a>
             <header className="v3-nav">
               <TLink href="/v3" label="Illumia" className="v3-nav__logo">
-                <img src="/brand/illumia-logo-light.svg" alt="Illumia Solutions, home" width={140} height={38} />
+                <img className="v3-logo v3-logo--on-dark" src="/brand/illumia-logo-light.svg" alt="Illumia Solutions, home" width={140} height={38} />
+                <img className="v3-logo v3-logo--on-light" src="/brand/illumia-logo-dark.svg" alt="Illumia Solutions, home" width={140} height={38} />
               </TLink>
               <div className="v3-nav__right">
-                <button className="v3-pill" onClick={() => setMotionOn((m) => !m)} aria-pressed={!motionOn}>
-                  {motionOn ? "Pause motion" : "Play motion"}
+                <ThemeToggle version="v3" className="v3-pill v3-pill--theme" />
+                <button className="v3-pill v3-pill--motion" onClick={() => setMotionOn((m) => !m)} aria-pressed={!motionOn} aria-label={motionOn ? "Pause motion" : "Play motion"}>
+                  <i aria-hidden="true" />
+                  <span>{motionOn ? "Pause motion" : "Play motion"}</span>
                 </button>
                 <TLink href="/v3/contact" className="v3-pill v3-pill--solid" label="Contact">Start a project</TLink>
                 <button className="v3-pill" onClick={() => setMenu((m) => !m)} aria-expanded={menu} aria-controls="v3-menu">
